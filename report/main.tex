@@ -1,7 +1,13 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 \usepackage[margin=2.5cm]{geometry}
+\linespread{1.15}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
 \usepackage{amsmath,amssymb,amsthm,physics,graphicx,booktabs,hyperref}
 \usepackage[capitalize]{cleveref}
+\usepackage{enumitem,longtable}
+\setlist{itemsep=0.3em,topsep=0.3em}
+\setlength{\emergencystretch}{2em}
 \newtheorem{proposition}{Proposition}
 \title{When Does Entanglement Give a Real Advantage?\\[2pt]
 \large The CHSH Game and the Quantum Prisoner's Dilemma under Local Noise}
@@ -23,8 +29,10 @@ The second line has been criticised. Benjamin and Hayden showed that the $(Q,Q)$
 \paragraph{Contributions.} (i) Derivations of the CHSH bounds and the EWL equilibrium structure, self-contained except for the cited Horodecki formula; (ii) numerical verification of every analytic claim; (iii) a side-by-side study of both games under the same local channels (Topic 9 of the course notes), including optimised CHSH settings, whose thresholds differ from fixed-setting ones for amplitude damping and dephasing; (iv) a proof that the $9/4$ focal equilibrium of Eisert and Wilkens \cite{ew2000} is a weak equilibrium in which every strategy is a best response, which we have not reconciled with the classification of Bolonek-Laso\'n and Kosi\'nski \cite{bolonek}. Prior studies of noisy EWL games exist \cite{johnson,chen,flitney-decoh}; to our knowledge, the common-channel comparison with CHSH is new.
 
 \section{Notation}
-\begin{center}\small
-\begin{tabular}{lp{0.45\linewidth}}
+This section lists the symbols used throughout the report.
+
+{\small
+\begin{longtable}{lp{0.45\linewidth}}
 \toprule
 $X,Y,Z$ & Pauli matrices; $\mathbb{I}$ identity\\
 $\ket{\Phi^+}=(\ket{00}+\ket{11})/\sqrt2$ & Bell state used in CHSH\\
@@ -42,10 +50,11 @@ $\$_A,\$_B$ & expected payoffs\\
 $\mathcal E_p$ & single-qubit noise channel of strength $p$\\
 $p^*$ & smallest $p$ with $S\le2$ (fixed settings) or $S_{\max}\le2$ (optimised settings)\\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{longtable}}
 
 \section{The CHSH game}
+This section shows that classical players win the CHSH game with probability at most $3/4$ and that quantum players reach $\cos^2(\pi/8)$, which is the largest value any quantum strategy allows.
+
 \subsection{Rules and the classical bound}
 A referee sends uniformly random bits $x$ to Alice and $y$ to Bob. They answer $a,b\in\{0,1\}$ without communicating and win iff $a\oplus b=x\wedge y$.
 
@@ -85,6 +94,8 @@ E(a,b)=\cos a\cos b+\sin a\sin b=\cos(a-b).
 With $A_0=Z$ ($a=0$), $A_1=X$ ($a=\pi/2$), $B_{0,1}=(Z\pm X)/\sqrt2$ ($b=\pm\pi/4$): $E_{00}=E_{01}=E_{10}=\cos\frac\pi4$ and $E_{11}=\cos\frac{3\pi}4$, so $S=4/\sqrt2=2\sqrt2$ and $P_{\rm win}=\tfrac12+\tfrac{\sqrt2}{4}=\tfrac{1+\cos(\pi/4)}{2}=\cos^2(\pi/8)\approx0.854$. Equality $\langle\mathcal B^2\rangle=8$ forces $\langle[A_0,A_1]\otimes[B_0,B_1]\rangle=-4$, which needs $\|[A_0,A_1]\|=\|[B_0,B_1]\|=2$, i.e.\ anticommuting observables (on the support of the state); here $[A_0,A_1]=[Z,X]=2iY$. In addition, $[B_0,B_1]=-2iY$ here, so $\mathcal B^2=4\,\mathbb{I}-4\,Y\otimes Y$, and on $\ket{\Phi^+}$ one has $\langle Y\otimes Y\rangle=-1$, giving $\langle\mathcal B^2\rangle=8$.
 
 \section{The EWL quantum Prisoner's Dilemma}
+This section derives the EWL payoffs, finds the equilibria of the two-parameter strategy set as a function of entanglement, and then treats the full $SU(2)$ set.
+
 \subsection{Protocol}\label{sec:protocol}
 Payoffs $(\$_A,\$_B)$ are $(3,3)$ for $CC$, $(0,5)$ for $CD$, $(5,0)$ for $DC$ and $(1,1)$ for $DD$. Starting from $\ket{00}=\ket{CC}$, the arbiter applies $J(\gamma)$, the players apply local unitaries, the arbiter applies $J^\dagger$ and measures in the computational basis (\cref{fig:circuit}):
 \begin{equation}
@@ -93,7 +104,7 @@ U(\theta,\phi)=\begin{pmatrix}e^{i\phi}\cos\frac\theta2 & \sin\frac\theta2\\ -\s
 \end{equation}
 with $\theta\in[0,\pi]$, $\phi\in[0,\pi/2]$. Since $(D\otimes D)^2=\mathbb{I}$, $J=\cos\frac\gamma2\,\mathbb{I}+i\sin\frac\gamma2\,D\otimes D$. Because $D=U(\pi,0)=\begin{pmatrix}0&1\\-1&0\end{pmatrix}=iY$, $D\otimes D=-Y\otimes Y$ and $J(\gamma)=\exp(-i\gamma\,Y\otimes Y/2)$, which is exactly Qiskit's \texttt{RYYGate}$(\gamma)$.
 
-\begin{figure}[t]\centering
+\begin{figure}[tbp]\centering
 \includegraphics[width=0.8\linewidth]{../figures/ewl_circuit.pdf}
 \caption{The EWL protocol as a circuit. The noise channels $\mathcal E_p$ (red) are inserted in \cref{sec:noise} between the players' moves $U_A,U_B$ and the arbiter's gate $J^\dagger$; without them the circuit is the noiseless game of this section.}
 \label{fig:circuit}
@@ -122,8 +133,9 @@ The first inequality uses $\sin^2\phi\le1$; the second holds because the middle 
 \[
 P_{CC}=(1-\sin^2\gamma\cos^2\phi)\,c^2,\quad P_{CD}=\sin^2\gamma\,s^2,\quad P_{DC}=\cos^2\gamma\,s^2,\quad P_{DD}=\sin^2\gamma\cos^2\phi\,c^2,
 \]
-\begin{equation}
-\$_A\big(U(\theta,\phi),Q\big)=(3-2\sin^2\gamma\cos^2\phi)\,c^2+5\cos^2\gamma\,s^2\;\le\;3c^2+5\cos^2\gamma\,s^2\;\le\;\max(3,\,5\cos^2\gamma).\label{eq:devQ}
+\begin{equation}\begin{split}
+\$_A\big(U(\theta,\phi),Q\big)&=(3-2\sin^2\gamma\cos^2\phi)\,c^2+5\cos^2\gamma\,s^2\\
+&\le\;3c^2+5\cos^2\gamma\,s^2\;\le\;\max(3,\,5\cos^2\gamma).\end{split}\label{eq:devQ}
 \end{equation}
 The maximum $5\cos^2\gamma$ is attained by $D$ ($\theta=\pi$). Since $\$_A(Q,Q)=3$ (set $\theta=0,\phi=\pi/2$),
 \[
@@ -133,26 +145,67 @@ The maximum over the set is exactly $\max(5\cos^2\gamma,3)$ here and $\max(5\sin
 
 Du \emph{et al.}~\cite{du} report two entanglement thresholds separating classical, intermediate and quantum regions in this game in a nuclear magnetic resonance (NMR) experiment. All NE statements in this subsection hold only in the two-parameter set, which is not closed under composition: for example $QD=(iZ)(iY)=iX=\begin{pmatrix}0&i\\i&0\end{pmatrix}$ is not of the form \cref{eq:U}, whose off-diagonal entries are $s$ and $-s$ with $s\ge0$ real. This $iX$ is one of the moves used in \cref{sec:fullsu2}.
 
-\begin{figure}[t]\centering
+\begin{figure}[tbp]\centering
 \includegraphics[width=0.6\linewidth]{../figures/ewl_gamma.pdf}
 \caption{Noiseless EWL versus entanglement $\gamma$. Solid: payoff of $(Q,Q)$ and $(D,D)$, which do not depend on $\gamma$. Dashed: Alice's best unilateral deviation over the $41\times21$ grid, which contains the profile itself, so dashed $\ge$ solid. A profile is a NE where the dashed curve coincides with its solid line. Each dashed curve leaves its solid line exactly at the analytic thresholds $\arcsin(1/\sqrt5)$ and $\arcsin\sqrt{2/5}$ (dotted), and between them neither profile is an equilibrium.}
 \label{fig:gamma}
 \end{figure}
 
 \subsection{Full \texorpdfstring{$SU(2)$}{SU(2)}: no pure equilibrium, two mixed ones}\label{sec:fullsu2}
-Benjamin and Hayden \cite{bh} showed that at $\gamma=\pi/2$, for any $U_B$ there is a $U_A$ giving Alice $5$ (see also the reply \cite{ewlreply}). A short proof: let $\ket\Phi=\ket{00}+\ket{11}$ and $P=\mathrm{diag}(1,i)$. Then $J\ket{00}=\tfrac1{\sqrt2}(\mathbb I\otimes P)\ket\Phi$, and for any matrices $(A\otimes B)\ket\Phi=(AB^{T}\otimes\mathbb I)\ket\Phi$. Moreover $J\ket{10}=\tfrac1{\sqrt2}(\ket{10}-i\ket{01})=\tfrac1{\sqrt2}(M\otimes\mathbb I)\ket\Phi$ with $M=\ket1\bra0-i\ket0\bra1$ unitary. Choose
+Benjamin and Hayden \cite{bh} showed that at $\gamma=\pi/2$, for any $U_B$ there is a $U_A$ giving Alice $5$ (see also the reply \cite{ewlreply}). A short proof follows.
+
+\textbf{Step 1: rewrite the entangled state.} Let $\ket\Phi=\ket{00}+\ket{11}$ and $P=\mathrm{diag}(1,i)$. Then $J\ket{00}=\tfrac1{\sqrt2}(\mathbb I\otimes P)\ket\Phi$, and for any matrices $(A\otimes B)\ket\Phi=(AB^{T}\otimes\mathbb I)\ket\Phi$.
+
+\textbf{Step 2: the target state.} $J\ket{10}=\tfrac1{\sqrt2}(\ket{10}-i\ket{01})=\tfrac1{\sqrt2}(M\otimes\mathbb I)\ket\Phi$ with $M=\ket1\bra0-i\ket0\bra1$ unitary.
+
+\textbf{Step 3: the counter-move.} Choose
 \[
 U_A=M\,\overline{U_B}\,P^\dagger\qquad(\text{unitary, with }\overline{U_B}=(U_B^{T})^{-1}).
 \]
-Then $(U_A\otimes U_B)J\ket{00}=\tfrac1{\sqrt2}(U_AP\,U_B^{T}\otimes\mathbb I)\ket\Phi=\tfrac1{\sqrt2}(M\otimes\mathbb I)\ket\Phi=J\ket{10}$, so $\ket{\psi_f}=J^\dagger J\ket{10}=\ket{DC}$ and $\$_A=5$, $\$_B=0$. The global phase of $U_A$ is irrelevant, so $U_A$ may be taken in $SU(2)$; in general it lies outside the two-parameter set. Since $5$ is the maximal payoff, in a pure NE Alice would have to earn $5$, forcing the outcome $\ket{DC}$ and $\$_B=0$; but by the swap symmetry there is a $U_B'$ giving Bob $5$, so Bob deviates. Hence no pure profile is a NE at $\gamma=\pi/2$. Mixed strategies remain \cite{ew2000}:
+Then
+\[
+(U_A\otimes U_B)J\ket{00}=\tfrac1{\sqrt2}(U_AP\,U_B^{T}\otimes\mathbb I)\ket\Phi=\tfrac1{\sqrt2}(M\otimes\mathbb I)\ket\Phi=J\ket{10},
+\]
+so $\ket{\psi_f}=J^\dagger J\ket{10}=\ket{DC}$ and $\$_A=5$, $\$_B=0$. The global phase of $U_A$ is irrelevant, so $U_A$ may be taken in $SU(2)$; in general it lies outside the two-parameter set.
+
+\textbf{Step 4: no pure equilibrium.} Since $5$ is the maximal payoff, in a pure NE Alice would have to earn $5$, forcing the outcome $\ket{DC}$ and $\$_B=0$; but by the swap symmetry there is a $U_B'$ giving Bob $5$, so Bob deviates. Hence no pure profile is a NE at $\gamma=\pi/2$. Mixed strategies remain \cite{ew2000}:
 \begin{enumerate}
 \item \textbf{Mixed NE with payoff 5/2 (at $\gamma=\pi/2$).} Alice plays $\mathbb{I}$ or $-iZ$, Bob plays $D$ or $-iX$, each with probability $1/2$ \cite{ew2000}. The four pairings give $(\mathbb I,D)\to(0,5)$, $(\mathbb I,-iX)\to(5,0)$, $(-iZ,D)\to(5,0)$ and $(-iZ,-iX)\to(0,5)$, so each player expects $5/2$.
 
-\emph{Proof that no deviation pays more than $5/2$.} Let Alice deviate to a general $U_A=\begin{pmatrix}a&b\\-\bar b&\bar a\end{pmatrix}$, $|a|^2+|b|^2=1$, $a=a_1+ia_2$, $b=b_1+ib_2$ (any element of $U(2)$ is a phase times such a matrix). At $\gamma=\pi/2$, $\cos\frac\gamma2=\sin\frac\gamma2=1/\sqrt2$ and \cref{eq:Jd} reads $f_{00}=(\alpha_{00}-i\alpha_{11})/\sqrt2$, $f_{11}=(\alpha_{11}-i\alpha_{00})/\sqrt2$, $f_{01}=(\alpha_{01}+i\alpha_{10})/\sqrt2$, $f_{10}=(\alpha_{10}+i\alpha_{01})/\sqrt2$. Against $D$: $(U_A\otimes D)J\ket{00}=\tfrac1{\sqrt2}(ib\ket{00}-a\ket{01}+i\bar a\ket{10}+\bar b\ket{11})$, so $(f_{00},f_{01},f_{10},f_{11})=(-b_2,-a_1,a_2,b_1)$, i.e.\ $P_{CC}=b_2^2$, $P_{CD}=a_1^2$, $P_{DC}=a_2^2$, $P_{DD}=b_1^2$ and $\$_A(U_A,D)=3b_2^2+5a_2^2+b_1^2$. Against $-iX\sim X$ (a global phase does not matter): $(U_A\otimes X)J\ket{00}=\tfrac1{\sqrt2}(ib\ket{00}+a\ket{01}+i\bar a\ket{10}-\bar b\ket{11})$, so $(f_{00},f_{01},f_{10},f_{11})=(ib_1,ia_2,ia_1,ib_2)$ and $\$_A(U_A,X)=3b_1^2+5a_1^2+b_2^2$. Against Bob's $50/50$ mixture Alice earns the average,
+\emph{Proof that no deviation pays more than $5/2$.} Let Alice deviate to a general $U_A=\begin{pmatrix}a&b\\-\bar b&\bar a\end{pmatrix}$, $|a|^2+|b|^2=1$, $a=a_1+ia_2$, $b=b_1+ib_2$ (any element of $U(2)$ is a phase times such a matrix). At $\gamma=\pi/2$, $\cos\frac\gamma2=\sin\frac\gamma2=1/\sqrt2$ and \cref{eq:Jd} reads
+\[
+f_{00}=\tfrac{\alpha_{00}-i\alpha_{11}}{\sqrt2},\quad f_{11}=\tfrac{\alpha_{11}-i\alpha_{00}}{\sqrt2},\quad f_{01}=\tfrac{\alpha_{01}+i\alpha_{10}}{\sqrt2},\quad f_{10}=\tfrac{\alpha_{10}+i\alpha_{01}}{\sqrt2}.
+\]
+
+\textbf{Step 1: Alice against $D$.} We have
+\[
+(U_A\otimes D)J\ket{00}=\tfrac1{\sqrt2}(ib\ket{00}-a\ket{01}+i\bar a\ket{10}+\bar b\ket{11}),
+\]
+so $(f_{00},f_{01},f_{10},f_{11})=(-b_2,-a_1,a_2,b_1)$, i.e.\ $P_{CC}=b_2^2$, $P_{CD}=a_1^2$, $P_{DC}=a_2^2$, $P_{DD}=b_1^2$ and $\$_A(U_A,D)=3b_2^2+5a_2^2+b_1^2$.
+
+\textbf{Step 2: Alice against $-iX\sim X$} (a global phase does not matter). We have
+\[
+(U_A\otimes X)J\ket{00}=\tfrac1{\sqrt2}(ib\ket{00}+a\ket{01}+i\bar a\ket{10}-\bar b\ket{11}),
+\]
+so $(f_{00},f_{01},f_{10},f_{11})=(ib_1,ia_2,ia_1,ib_2)$ and $\$_A(U_A,X)=3b_1^2+5a_1^2+b_2^2$.
+
+\textbf{Step 3: average.} Against Bob's $50/50$ mixture Alice earns the average,
 \[
 \tfrac12\big[5(a_1^2+a_2^2)+4(b_1^2+b_2^2)\big]=\tfrac52|a|^2+2|b|^2=2+\tfrac12|a|^2\le\tfrac52,
 \]
-with equality iff $|a|=1$, i.e.\ $U_A$ diagonal. By linearity no mixed deviation does better. For Bob, let $V=\begin{pmatrix}a&b\\-\bar b&\bar a\end{pmatrix}$ answer Alice's mixture $\{\mathbb I,-iZ\}$. From $(\mathbb I\otimes V)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}+ib\ket{10}+i\bar a\ket{11})$ one gets $P_{CC}=a_1^2$, $P_{DD}=a_2^2$, $P_{CD}=b_1^2$, $P_{DC}=b_2^2$, so $\$_B=3a_1^2+a_2^2+5b_1^2$. From $(Z\otimes V)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}-ib\ket{10}-i\bar a\ket{11})$ one gets $P_{CC}=a_2^2$, $P_{DD}=a_1^2$, $P_{CD}=b_2^2$, $P_{DC}=b_1^2$, so $\$_B=3a_2^2+a_1^2+5b_2^2$. The average is $2|a|^2+\tfrac52|b|^2=2+\tfrac12|b|^2\le\tfrac52$, with equality iff $a=0$. Hence the profile is a NE. It is not strict: the best-response set of Alice is the diagonal subgroup $\{\mathrm{diag}(e^{i\alpha},e^{-i\alpha})\}$, which contains $\mathbb I$ and $Q=iZ$ and is a proper subset of $SU(2)$, whereas for $R$ below it is all of $SU(2)$. This equilibrium uses $iX$, which lies outside the two-parameter set.
+with equality iff $|a|=1$, i.e.\ $U_A$ diagonal. By linearity no mixed deviation does better.
+
+\textbf{Step 4: Bob.} Let $V=\begin{pmatrix}a&b\\-\bar b&\bar a\end{pmatrix}$ answer Alice's mixture $\{\mathbb I,-iZ\}$. From
+\[
+(\mathbb I\otimes V)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}+ib\ket{10}+i\bar a\ket{11})
+\]
+one gets $P_{CC}=a_1^2$, $P_{DD}=a_2^2$, $P_{CD}=b_1^2$, $P_{DC}=b_2^2$, so $\$_B=3a_1^2+a_2^2+5b_1^2$. From
+\[
+(Z\otimes V)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}-ib\ket{10}-i\bar a\ket{11})
+\]
+one gets $P_{CC}=a_2^2$, $P_{DD}=a_1^2$, $P_{CD}=b_2^2$, $P_{DC}=b_1^2$, so $\$_B=3a_2^2+a_1^2+5b_2^2$. The average is $2|a|^2+\tfrac52|b|^2=2+\tfrac12|b|^2\le\tfrac52$, with equality iff $a=0$. Hence the profile is a NE.
+
+\begingroup\sloppy\textbf{Not strict.} The best-response set of Alice is the diagonal subgroup $\{\mathrm{diag}(e^{i\alpha},e^{-i\alpha})\}$, which contains $\mathbb I$ and $Q=iZ$ and is a proper subset of $SU(2)$, whereas for $R$ below it is all of $SU(2)$. It uses $iX$, which lies outside the two-parameter set.\par\endgroup
 \item \textbf{Focal NE, payoff 9/4.} Each player mixes $\{\mathbb{I},iX,iY,iZ\}$ uniformly \cite{ew2000}.
 \end{enumerate}
 
@@ -169,6 +222,8 @@ The phases $i$ in $iX,iY,iZ$ cancel in the projectors. The measured state is $J^
 Bolonek-Laso\'n and Kosi\'nski \cite{bolonek} classify the mixed equilibria of the maximally entangled game using Landsburg's method. \Cref{prop:focal} proves directly that $(R,R)$ is an equilibrium in which every strategy is a best response, and our numerics agree (every deviation pays exactly $2.25$); we have not checked how this equilibrium is accounted for in their classification.
 
 \section{Simulation methods}\label{sec:methods}
+This section states how every number in the report was computed.
+
 All figures and all numbers, except the Qiskit cross-checks and the $SU(2)$ equilibrium checks, come from \texttt{qgames.py}; those come from \texttt{qiskit\_circuits.py}, \texttt{mixed\_ne.py} and \texttt{focal\_ne.py}.
 \begin{itemize}
 \item \textbf{Exact evolution.} States are evolved as density matrices in numpy. Each channel is a set of Kraus operators, and in the batched deviation search the same channel acts on both qubits as a $16\times16$ superoperator on $\mathrm{vec}(\rho)$, so a whole batch of Alice's candidate moves is evaluated with one matrix product.
@@ -179,14 +234,23 @@ All figures and all numbers, except the Qiskit cross-checks and the $SU(2)$ equi
 \end{itemize}
 
 \section{Noise: the course channels applied to both games}\label{sec:noise}
+This section shows how much noise each game tolerates before its quantum advantage disappears.
+
 \subsection{Model}
 We use the channels of the course notes (Topic 9) \cite{notes}, applied independently and identically to both qubits so that both games stay symmetric (the channel $\mathcal E_p\otimes\mathcal E_p$ commutes with $\mathrm{SWAP}$, so the swap argument of \cref{sec:equilibria} still applies and it suffices to check Alice's deviations):
 \begin{align*}
-\text{depolarizing:}&\quad \rho\mapsto(1-p)\rho+\tfrac p3\textstyle\sum_{i=1}^3\sigma_i\rho\sigma_i \quad(\text{Bloch vector}\times(1-\tfrac43p),\ p\in[0,1]),\\
+\text{depolarizing:}&\quad \rho\mapsto(1-p)\rho+\tfrac p3\textstyle\sum_{i=1}^3\sigma_i\rho\sigma_i\\
+&\qquad(\text{Bloch vector}\times(1-\tfrac43p),\ p\in[0,1]),\\
 \text{dephasing:}&\quad \rho\mapsto(1-\tfrac p2)\rho+\tfrac p2 Z\rho Z,\\
 \text{amplitude damping:}&\quad K_0=\mathrm{diag}(1,\sqrt{1-p}),\ K_1=\sqrt p\,\ket0\bra1.
 \end{align*}
-All three are CPTP. Depolarizing has Kraus operators $\sqrt{1-p}\,\mathbb I,\sqrt{p/3}\,\sigma_i$ and $(1-p)\mathbb I+3\cdot\frac p3\mathbb I=\mathbb I$. Dephasing has $\sqrt{1-p/2}\,\mathbb I,\sqrt{p/2}\,Z$ and $(1-\frac p2)+\frac p2=1$. For amplitude damping $K_0^\dagger K_0+K_1^\dagger K_1=\mathrm{diag}(1,1-p)+p\ket1\bra1=\mathbb I$ ($\ket1$ decays to $\ket0$); its Bloch action is $(n_1,n_2,n_3)\mapsto(\sqrt{1-p}\,n_1,\sqrt{1-p}\,n_2,(1-p)n_3+p)$. The depolarizing factor follows from $\sum_i\sigma_i\rho\sigma_i=\tfrac12(3\mathbb I-\vec n\cdot\vec\sigma)$.
+All three are CPTP:
+\begin{itemize}
+\item Depolarizing has Kraus operators $\sqrt{1-p}\,\mathbb I,\sqrt{p/3}\,\sigma_i$ and $(1-p)\mathbb I+3\cdot\frac p3\mathbb I=\mathbb I$.
+\item Dephasing has Kraus operators $\sqrt{1-p/2}\,\mathbb I,\sqrt{p/2}\,Z$ and $(1-\frac p2)+\frac p2=1$.
+\item For amplitude damping $K_0^\dagger K_0+K_1^\dagger K_1=\mathrm{diag}(1,1-p)+p\ket1\bra1=\mathbb I$ ($\ket1$ decays to $\ket0$); its Bloch action is $(n_1,n_2,n_3)\mapsto(\sqrt{1-p}\,n_1,\sqrt{1-p}\,n_2,(1-p)n_3+p)$.
+\end{itemize}
+The depolarizing factor follows from $\sum_i\sigma_i\rho\sigma_i=\tfrac12(3\mathbb I-\vec n\cdot\vec\sigma)$.
 
 \begingroup\sloppy In CHSH the noise acts on each qubit of $\ket{\Phi^+}$ before measurement, i.e.\ $\rho=(\mathcal E_p\otimes\mathcal E_p)(\ket{\Phi^+}\!\bra{\Phi^+})$ and
 $E_{xy}=\tr[\rho\,A_x\otimes B_y]$; we evaluate both the noiseless optimal settings kept fixed (what a fixed experiment sees) and settings re-optimised for the noisy state. In EWL it acts after the players' moves and before $J^\dagger$ (\cref{fig:circuit}):
@@ -195,7 +259,13 @@ $E_{xy}=\tr[\rho\,A_x\otimes B_y]$; we evaluate both the noiseless optimal setti
 \]\endgroup
 
 \subsection{CHSH}\label{sec:chsh-noise}
-\paragraph{Fixed settings.} Local depolarizing shrinks each Bloch vector by $\eta=1-\tfrac43p$, so all correlators scale by $\eta^2$ (the state has $T=\eta^2\,\mathrm{diag}(1,-1,1)$ and $\langle(\vec a\cdot\vec\sigma)\otimes(\vec b\cdot\vec\sigma)\rangle=\vec a^{\mathsf T}T\vec b$) and $S=2\sqrt2\,\eta^2$. The violation is lost when $\eta^2=1/\sqrt2$, i.e.\ $p^*=\tfrac34(1-2^{-1/4})=0.1193$. Dephasing maps $(n_1,n_2,n_3)\mapsto((1-p)n_1,(1-p)n_2,n_3)$ on each Bloch vector, so it leaves $\langle Z\otimes Z\rangle=1$ intact and scales $\langle X\otimes X\rangle$ to $(1-p)^2$. With the noiseless optimum $A_0=Z$, $A_1=X$, $B_{0,1}=(Z\pm X)/\sqrt2$ (and $\langle Z\otimes X\rangle=0$ preserved), $E_{00}=E_{01}=1/\sqrt2$ come from $\langle Z\otimes Z\rangle$ and $E_{10}=-E_{11}=(1-p)^2/\sqrt2$ from $\langle X\otimes X\rangle$, giving $S=\sqrt2\,[1+(1-p)^2]$ and $p^*=1-\sqrt{\sqrt2-1}=0.3564$. For amplitude damping the state has $P_{00}=\frac{1+p^2}{2}$, $P_{11}=\frac{(1-p)^2}{2}$, $P_{01}=P_{10}=\frac{p(1-p)}{2}$ and a $\ket{00}\bra{11}$ coherence, so $\langle Z\otimes Z\rangle=(1-p)^2+p^2$, $\langle X\otimes X\rangle=1-p$ and $\langle Z\otimes X\rangle=\langle X\otimes Z\rangle=0$. Hence $E_{00}=E_{01}=\frac{(1-p)^2+p^2}{\sqrt2}$, $E_{10}=-E_{11}=\frac{1-p}{\sqrt2}$ and
+\paragraph{Fixed settings.} Here the noiseless optimal settings are kept and the channel acts on the state. We treat each channel in turn.
+
+\emph{Depolarizing.} Local depolarizing shrinks each Bloch vector by $\eta=1-\tfrac43p$, so all correlators scale by $\eta^2$ (the state has $T=\eta^2\,\mathrm{diag}(1,-1,1)$ and $\langle(\vec a\cdot\vec\sigma)\otimes(\vec b\cdot\vec\sigma)\rangle=\vec a^{\mathsf T}T\vec b$) and $S=2\sqrt2\,\eta^2$. The violation is lost when $\eta^2=1/\sqrt2$, i.e.\ $p^*=\tfrac34(1-2^{-1/4})=0.1193$.
+
+\emph{Dephasing.} Dephasing maps $(n_1,n_2,n_3)\mapsto((1-p)n_1,(1-p)n_2,n_3)$ on each Bloch vector, so it leaves $\langle Z\otimes Z\rangle=1$ intact and scales $\langle X\otimes X\rangle$ to $(1-p)^2$. With the noiseless optimum $A_0=Z$, $A_1=X$, $B_{0,1}=(Z\pm X)/\sqrt2$ (and $\langle Z\otimes X\rangle=0$ preserved), $E_{00}=E_{01}=1/\sqrt2$ come from $\langle Z\otimes Z\rangle$ and $E_{10}=-E_{11}=(1-p)^2/\sqrt2$ from $\langle X\otimes X\rangle$, giving $S=\sqrt2\,[1+(1-p)^2]$ and $p^*=1-\sqrt{\sqrt2-1}=0.3564$.
+
+\emph{Amplitude damping.} The state has $P_{00}=\frac{1+p^2}{2}$, $P_{11}=\frac{(1-p)^2}{2}$, $P_{01}=P_{10}=\frac{p(1-p)}{2}$ and a $\ket{00}\bra{11}$ coherence, so $\langle Z\otimes Z\rangle=(1-p)^2+p^2$, $\langle X\otimes X\rangle=1-p$ and $\langle Z\otimes X\rangle=\langle X\otimes Z\rangle=0$. Hence $E_{00}=E_{01}=\frac{(1-p)^2+p^2}{\sqrt2}$, $E_{10}=-E_{11}=\frac{1-p}{\sqrt2}$ and
 \[S=\sqrt2\,\big(2-3p+2p^2\big).\]
 $S=2$ reads $2p^2-3p+(2-\sqrt2)=0$, with root $p^*=\tfrac14\big(3-\sqrt{8\sqrt2-7}\big)=0.2308$ in $[0,1]$ (the other root exceeds $1$). This agrees with the numerical root $0.23076$ (\cref{fig:chsh}).
 
@@ -203,7 +273,22 @@ $S=2$ reads $2p^2-3p+(2-\sqrt2)=0$, with root $p^*=\tfrac14\big(3-\sqrt{8\sqrt2-
 \begin{equation}
 S_{\max}=2\sqrt{t_1+t_2},\label{eq:horodecki}
 \end{equation}
-with $\sigma_1,\sigma_2,\sigma_3=X,Y,Z$, so CHSH can be violated iff $t_1+t_2>1$. Outline: observables $\pm\mathbb I$ give $|S|\le2$. For $A_0=\vec a\cdot\vec\sigma$, $A_1=\vec a'\cdot\vec\sigma$, $B_0=\vec b\cdot\vec\sigma$, $B_1=\vec b'\cdot\vec\sigma$ (unit vectors) each term is $\vec a^{\mathsf T}T\vec b$ (no local terms occur because all observables are traceless), so $S=\vec a^{\mathsf T}T(\vec b+\vec b')+\vec a'^{\mathsf T}T(\vec b-\vec b')$. Since $|\vec b|=|\vec b'|=1$, $(\vec b+\vec b')\perp(\vec b-\vec b')$ and $|\vec b+\vec b'|^2+|\vec b-\vec b'|^2=4$, so $\vec b+\vec b'=2\cos\alpha\,\vec c$, $\vec b-\vec b'=2\sin\alpha\,\vec c'$ with orthonormal $\vec c,\vec c'$ and $\alpha\in[0,\pi/2]$. Then $S=2\cos\alpha\,\vec a^{\mathsf T}T\vec c+2\sin\alpha\,\vec a'^{\mathsf T}T\vec c'\le2\cos\alpha|T\vec c|+2\sin\alpha|T\vec c'|\le2\sqrt{|T\vec c|^2+|T\vec c'|^2}$ (Cauchy--Schwarz twice), and $|T\vec c|^2+|T\vec c'|^2=\vec c^{\mathsf T}T^{\mathsf T}T\vec c+\vec c'^{\mathsf T}T^{\mathsf T}T\vec c'\le t_1+t_2$ (Ky Fan). Equality holds for $\vec c,\vec c'$ the top two eigenvectors, $\vec a\propto T\vec c$, $\vec a'\propto T\vec c'$ and $\tan\alpha=|T\vec c'|/|T\vec c|$. We use \cref{eq:horodecki} as a cited result.
+with $\sigma_1,\sigma_2,\sigma_3=X,Y,Z$, so CHSH can be violated iff $t_1+t_2>1$. The outline of the proof is as follows.
+\begin{enumerate}
+\item Observables $\pm\mathbb I$ give $|S|\le2$.
+\item For $A_0=\vec a\cdot\vec\sigma$, $A_1=\vec a'\cdot\vec\sigma$, $B_0=\vec b\cdot\vec\sigma$, $B_1=\vec b'\cdot\vec\sigma$ (unit vectors) each term is $\vec a^{\mathsf T}T\vec b$ (no local terms occur because all observables are traceless), so
+\[
+S=\vec a^{\mathsf T}T(\vec b+\vec b')+\vec a'^{\mathsf T}T(\vec b-\vec b').
+\]
+\item Since $|\vec b|=|\vec b'|=1$, $(\vec b+\vec b')\perp(\vec b-\vec b')$ and $|\vec b+\vec b'|^2+|\vec b-\vec b'|^2=4$, so $\vec b+\vec b'=2\cos\alpha\,\vec c$, $\vec b-\vec b'=2\sin\alpha\,\vec c'$ with orthonormal $\vec c,\vec c'$ and $\alpha\in[0,\pi/2]$.
+\item Then, by Cauchy--Schwarz twice,
+\[
+S=2\cos\alpha\,\vec a^{\mathsf T}T\vec c+2\sin\alpha\,\vec a'^{\mathsf T}T\vec c'\le2\cos\alpha|T\vec c|+2\sin\alpha|T\vec c'|\le2\sqrt{|T\vec c|^2+|T\vec c'|^2}.
+\]
+\item By the Ky Fan inequality, $|T\vec c|^2+|T\vec c'|^2=\vec c^{\mathsf T}T^{\mathsf T}T\vec c+\vec c'^{\mathsf T}T^{\mathsf T}T\vec c'\le t_1+t_2$.
+\item Equality holds for $\vec c,\vec c'$ the top two eigenvectors, $\vec a\propto T\vec c$, $\vec a'\propto T\vec c'$ and $\tan\alpha=|T\vec c'|/|T\vec c|$.
+\end{enumerate}
+We use \cref{eq:horodecki} as a cited result.
 
 Applying it to $\ket{\Phi^+}$ after the local channels gives the following.
 \begin{itemize}
@@ -213,7 +298,7 @@ Applying it to $\ket{\Phi^+}$ after the local channels gives the following.
 \end{itemize}
 The optimised thresholds are our headline values; the fixed-setting thresholds ($0.1193$ depolarizing, $0.2308$ amplitude damping, $0.3564$ dephasing) are what a fixed noiseless-optimal experiment sees.
 
-\begin{figure}[t]\centering
+\begin{figure}[tbp]\centering
 \includegraphics[width=0.7\linewidth]{../figures/chsh_noise.pdf}
 \caption{CHSH value under the three channels. Solid: settings optimised for the noisy state; dashed: fixed noiseless settings. With optimised settings the violation ($S>2$) is lost at $p^*=0.119$ (depolarizing) and $0.293$ (amplitude damping) and never under dephasing for $p<1$ (analytically; the plot stops at $p=0.75$). The two depolarizing curves coincide. With fixed settings the thresholds are $0.119$, $0.231$ and $0.356$ for depolarizing, amplitude damping and dephasing.}
 \label{fig:chsh}
@@ -221,8 +306,10 @@ The optimised thresholds are our headline values; the fixed-setting thresholds (
 
 \subsection{EWL}
 \Cref{fig:phase} shows, over the $(\gamma,p)$ plane, the payoff of $(Q,Q)$ and the boundary of the region where it is a NE in the two-parameter set. \Cref{tab:ewl} lists the entanglement threshold $\gamma^*$ and the payoffs at $\gamma=\pi/2$ for $p=0.1$ and $p=0.3$ only; the phase figure covers $p$ up to $0.6$. The column $\$(D,D)$ is the payoff of the classical profile in the same noisy device, that is, what players earn without using the quantum move.
-\begin{table}[t]\centering\small
-\caption{EWL $(Q,Q)$ equilibrium threshold $\gamma^*$ and payoffs at $\gamma=\pi/2$. Thresholds come from bisection on a $41\times21$ deviation grid and use bisection tolerance $10^{-4}$ and carry an uncertainty of $\pm0.001$; a $121\times61$ grid and a 60-point scan of $\gamma$ reproduce them to three decimals and show a single switch from non-NE to NE (a $401\times201$ grid gives the same values to four decimals). The row $p=0$ is analytic.}
+
+The thresholds in \cref{tab:ewl} come from bisection on a $41\times21$ deviation grid with bisection tolerance $10^{-4}$ and carry an uncertainty of $\pm0.001$. A $121\times61$ grid and a 60-point scan of $\gamma$ reproduce them to three decimals and show a single switch from non-NE to NE; a $401\times201$ grid gives the same values to four decimals.
+\begin{table}[tbp]\centering\small
+\caption{EWL $(Q,Q)$ equilibrium threshold $\gamma^*$ and payoffs at $\gamma=\pi/2$. The row $p=0$ is analytic; the numerical accuracy of the thresholds is described in the text.}
 \label{tab:ewl}
 \begin{tabular}{lccccccc}
 \toprule
@@ -239,19 +326,21 @@ amplitude damping & 0.682 & 2.945 & 1.145 & 0.678 & 2.805 & 1.405\\
 \end{table}
 Depolarizing and dephasing noise push the threshold to larger $\gamma$: more entanglement is needed for the quantum equilibrium to exist, and it pays less. Amplitude damping moves the threshold slightly down ($0.678<0.685$ at $p=0.3$). The equilibrium payoff $\$(Q,Q)$ stays above the noisy $\$(D,D)$ in every tested case, but the margin shrinks as noise grows because noise also raises the $(D,D)$ payoff. \Cref{fig:adv} (right) shows this margin at $\gamma=\pi/2$ for $p\le0.6$: it falls to $0.080$ for depolarizing noise, $0.320$ for dephasing and $0.800$ for amplitude damping, and $(Q,Q)$ is still an equilibrium at $\gamma=\pi/2$ at $p=0.6$ for all three channels. Beyond the plotted range, under dephasing $(Q,Q)$ stops being a NE at $\gamma=\pi/2$ at $p\approx0.625$ (the margin stays positive but small), and under depolarizing noise the margin reaches $0$ at $p=3/4$, where every profile pays $9/4$.
 
-\begin{figure}[t]\centering
+\begin{figure}[tbp]\centering
 \includegraphics[width=\linewidth]{../figures/ewl_phase.pdf}
 \caption{EWL $(Q,Q)$ payoff (colour, one shared scale) and the boundary (white) to the right of which $(Q,Q)$ is a NE in the two-parameter set. Depolarizing and dephasing noise move the boundary to larger $\gamma$, dephasing much more strongly, and all three channels lower the payoff. Amplitude damping moves the boundary only slightly, to lower $\gamma$ (from $0.685$ to $0.671$ at $p=0.6$). Left of the boundary the colour is \emph{not} an equilibrium payoff.}
 \label{fig:phase}
 \end{figure}
 
-\begin{figure}[t]\centering
+\begin{figure}[tbp]\centering
 \includegraphics[width=\linewidth]{../figures/advantage_vs_noise.pdf}
 \caption{Quantum margins as a function of noise with maximally entangled resources ($\ket{\Phi^+}$ for CHSH, $\gamma=\pi/2$ for EWL). Left: CHSH value above the classical bound with optimised settings, $S_{\max}-2$. Right: EWL payoff of $(Q,Q)$ minus the noisy payoff of $(D,D)$ at $\gamma=\pi/2$. The CHSH margin crosses zero for depolarizing and amplitude damping noise and decays towards zero for dephasing ($0.025$ at $p=0.6$), whereas the EWL margin remains positive for all three channels over the plotted range $p\le0.6$. The two vertical scales are not commensurable; only signs and zero crossings are compared.}
 \label{fig:adv}
 \end{figure}
 
 \section{Discussion}
+This section compares the two advantages and states what our simulations can and cannot support.
+
 \paragraph{Two different kinds of advantage.} The CHSH advantage is a winning probability that no local hidden-variable strategy can reach; in an experiment that closes the locality and detection loopholes it is certified by violation of a Bell inequality, and, for depolarizing and amplitude-damping noise, disappears at a sharp noise threshold. The EWL ``advantage'' is a property of an equilibrium in a game whose rules include the arbiter's gate $J$. Van Enk and Pike \cite{vanenk} and Landsburg \cite{landsburg} argue that the EWL outcomes can be reproduced by a classical game with a suitably enlarged strategy and payoff table; on that view the quantumness lies in the arbiter's apparatus, and the players' moves are ordinary choices in an enlarged classical game. A possible reading, which we did not test, is that EWL degrades gradually in the range we tested because it never relies on nonclassical correlations surviving to the players, whereas the CHSH value is a direct measure of those correlations and can be pushed to the classical bound.
 
 \paragraph{The threshold depends on the settings and the channel.} Under depolarizing noise the state is Werner-type and a sharp threshold at $p^*=0.119$ exists for any settings. Under amplitude damping, re-optimising the settings moves the threshold from $0.231$ to $0.293$. Under dephasing the Bell violation never disappears for $p<1$ once the settings are optimised, because the $Z\otimes Z$ correlation stays intact and the two remaining correlations scale as $(1-p)^2$; the margin $2\sqrt{1+(1-p)^4}-2\approx(1-p)^4$ for $p$ near 1 is $0.025$ at $p=0.6$ and $10^{-4}$ at $p=0.9$, which no finite-statistics experiment could resolve. The ``sharp threshold'' picture therefore holds for two of the three channels, and a fixed experiment sees a threshold for all three. Even so, the CHSH margin reaches zero at moderate noise for two channels, while the EWL margin over noisy $(D,D)$ stays positive in all three for $p\le0.6$ (\cref{fig:adv}); beyond that range the dephasing equilibrium is lost at $p\approx0.625$ and the depolarizing margin reaches zero at $p=3/4$. The two margins have different units and baselines, so only their signs are compared.
@@ -261,6 +350,8 @@ Depolarizing and dephasing noise push the threshold to larger $\gamma$: more ent
 \paragraph{Loopholes.} Our results are simulations of the quantum model and certify nothing experimentally. A CHSH experiment on a single chip has no spacelike separation and so does not close the locality loophole; loophole-free tests such as Ref.~\cite{hensen} are needed for that claim.
 
 \section{Limitations}
+The results above are subject to the following restrictions.
+
 \begin{itemize}
 \item NE checks are grid searches over a $41\times21$ grid of deviations $U(\theta,\phi)$, so a narrow profitable deviation could be missed; thresholds in \cref{tab:ewl} come from bisection (tolerance $10^{-4}$, grid-converged to $\pm0.001$) and the phase diagrams use a $41\times41$ grid over $(\gamma,p)$ (spacing $0.039$ in $\gamma$, $0.015$ in $p$), which limits the resolution of the boundaries in \cref{fig:phase}.
 \item Noisy equilibria were tested only in the two-parameter strategy set, not in $SU(2)$.
@@ -271,12 +362,14 @@ Depolarizing and dephasing noise push the threshold to larger $\gamma$: more ent
 \end{itemize}
 
 \section{Conclusion}
+This section summarises which advantage is of quantum origin and how each behaves under noise.
+
 Entanglement gives the CHSH players an advantage that a loophole-free Bell test can certify and that noise can remove: with optimised settings it is lost at $p^*=0.119$ for depolarizing noise and $p^*=0.293$ for amplitude damping, while under dephasing it survives for all $p<1$ with a rapidly shrinking margin. A fixed noiseless experiment loses it at $0.119$, $0.231$ and $0.356$ respectively. In the EWL Prisoner's Dilemma entanglement changes the equilibrium structure in a way that stays above noisy classical play at every tested noise level ($p\le0.6$), but it depends on the chosen strategy set and, according to van Enk and Pike and Landsburg, can be reproduced by a classical game with an enlarged payoff table. Only the cooperative, nonlocal advantage can be certified by a Bell test. \Cref{tab:summary} collects the main results.
 
-\begin{table}[t]\centering\small
+\begin{table}[tbp]\centering\small
 \caption{Summary of results: analytic value and numerical value for each quantity. CHSH thresholds are for optimised settings; the fixed-setting thresholds are $0.1193$, $0.2308$ and $0.3564$ (depolarizing, amplitude damping, dephasing). Numerics come from \texttt{qgames.py}, except the two equilibrium rows (\texttt{mixed\_ne.py}, \texttt{focal\_ne.py}).}
 \label{tab:summary}
-\begin{tabular}{lll}
+\begin{tabular}{lp{0.3\linewidth}p{0.3\linewidth}}
 \toprule
 quantity & analytic & numerical\\
 \midrule
@@ -322,7 +415,7 @@ Alice's move acts as $U\ket0=e^{i\phi}c\ket0-s\ket1$ and $U\ket1=s\ket0+e^{-i\ph
 By \cref{eq:Jd}, using $c_\gamma^2-s_\gamma^2=\cos\gamma$ and $2c_\gamma s_\gamma=\sin\gamma$,
 \begin{align*}
 f_{00}&=ic_\gamma s_\gamma s-is_\gamma c_\gamma s=0, & f_{11}&=(c_\gamma^2+s_\gamma^2)s=s,\\
-f_{01}&=-c\,(c_\gamma^2e^{i\phi}+s_\gamma^2e^{-i\phi})=-c\,(\cos\phi+i\cos\gamma\sin\phi), & f_{10}&=ic\,s_\gamma c_\gamma(e^{-i\phi}-e^{i\phi})=c\sin\gamma\sin\phi .
+f_{01}&=-c\,(c_\gamma^2e^{i\phi}+s_\gamma^2e^{-i\phi})=-c\,(\cos\phi+i\cos\gamma\sin\phi),\\ f_{10}&=ic\,s_\gamma c_\gamma(e^{-i\phi}-e^{i\phi})=c\sin\gamma\sin\phi .
 \end{align*}
 Hence $P_{CC}=0$, $P_{CD}=c^2(\cos^2\phi+\cos^2\gamma\sin^2\phi)=c^2(1-\sin^2\gamma\sin^2\phi)$, $P_{DC}=c^2\sin^2\gamma\sin^2\phi$ and $P_{DD}=s^2$.
 
@@ -338,24 +431,24 @@ f_{01}&=2c_\gamma s_\gamma s=s\sin\gamma, & f_{10}&=-is\cos\gamma .
 So $P_{CC}=c^2(\sin^2\phi+\cos^2\gamma\cos^2\phi)=c^2(1-\sin^2\gamma\cos^2\phi)$, $P_{CD}=s^2\sin^2\gamma$, $P_{DC}=s^2\cos^2\gamma$ and $P_{DD}=c^2\sin^2\gamma\cos^2\phi$. The payoffs are $\$_A=5P_{DC}+P_{DD}$ against $D$ and $\$_A=3P_{CC}+5P_{DC}+P_{DD}$ against $Q$, which are \cref{eq:devD,eq:devQ}.
 
 \begin{thebibliography}{99}
-\bibitem{chsh} J.~F. Clauser, M.~A. Horne, A.~Shimony, and R.~A. Holt, Phys. Rev. Lett. \textbf{23}, 880 (1969).
-\bibitem{tsirelson} B.~S. Cirel'son (Tsirelson), Lett. Math. Phys. \textbf{4}, 93 (1980).
-\bibitem{meyer} D.~A. Meyer, Phys. Rev. Lett. \textbf{82}, 1052 (1999).
-\bibitem{ewl} J.~Eisert, M.~Wilkens, and M.~Lewenstein, Phys. Rev. Lett. \textbf{83}, 3077 (1999); Erratum, Phys. Rev. Lett. \textbf{124}, 139901 (2020).
-\bibitem{ew2000} J.~Eisert and M.~Wilkens, J. Mod. Opt. \textbf{47}, 2543 (2000), arXiv:quant-ph/0004076.
-\bibitem{bh} S.~C. Benjamin and P.~M. Hayden, Phys. Rev. Lett. \textbf{87}, 069801 (2001).
-\bibitem{ewlreply} J.~Eisert, M.~Wilkens, and M.~Lewenstein, Phys. Rev. Lett. \textbf{87}, 069802 (2001).
-\bibitem{johnson} N.~F. Johnson, Phys. Rev. A \textbf{63}, 020302(R) (2001).
-\bibitem{chen} J.-L. Chen, L.~C. Kwek, and C.~H. Oh, Phys. Rev. A \textbf{65}, 052320 (2002).
-\bibitem{du} J.~Du \emph{et al.}, Phys. Rev. Lett. \textbf{88}, 137902 (2002).
-\bibitem{vanenk} S.~J. van Enk and R.~Pike, Phys. Rev. A \textbf{66}, 024306 (2002).
-\bibitem{flitney-review} A.~P. Flitney and D.~Abbott, Fluct. Noise Lett. \textbf{2}, R175 (2002).
-\bibitem{cleve} R.~Cleve, P.~H\o{}yer, B.~Toner, and J.~Watrous, Proc. 19th IEEE Conf. on Computational Complexity, 236 (2004), arXiv:quant-ph/0404076.
-\bibitem{landsburg} S.~E. Landsburg, Notices Amer. Math. Soc. \textbf{51}, 394 (2004).
-\bibitem{flitney-decoh} A.~P. Flitney and D.~Abbott, J. Phys. A \textbf{38}, 449 (2005).
-\bibitem{horodecki} R.~Horodecki, P.~Horodecki, and M.~Horodecki, Phys. Lett. A \textbf{200}, 340 (1995).
-\bibitem{bolonek} K.~Bolonek-Laso\'n and P.~Kosi\'nski, arXiv:1509.01843 (2015).
-\bibitem{hensen} B.~Hensen \emph{et al.}, Nature \textbf{526}, 682 (2015).
-\bibitem{notes} Course notes, Quantum Information Theory, Topic 9: Qubit decoherence channels (2026), Eqs.\ 9.1, 9.2, 9.8, 9.9, 9.15.
+\bibitem{chsh} J.~F. Clauser, M.~A. Horne, A.~Shimony, and R.~A. Holt, ``Proposed experiment to test local hidden-variable theories'', Phys. Rev. Lett. \textbf{23}, 880 (1969).
+\bibitem{tsirelson} B.~S. Cirel'son (Tsirelson), ``Quantum generalizations of Bell's inequality'', Lett. Math. Phys. \textbf{4}, 93 (1980).
+\bibitem{meyer} D.~A. Meyer, ``Quantum strategies'', Phys. Rev. Lett. \textbf{82}, 1052 (1999), arXiv:quant-ph/9804010.
+\bibitem{ewl} J.~Eisert, M.~Wilkens, and M.~Lewenstein, ``Quantum games and quantum strategies'', Phys. Rev. Lett. \textbf{83}, 3077 (1999), arXiv:quant-ph/9806088; Erratum, Phys. Rev. Lett. \textbf{124}, 139901 (2020).
+\bibitem{ew2000} J.~Eisert and M.~Wilkens, ``Quantum games'', J. Mod. Opt. \textbf{47}, 2543 (2000), arXiv:quant-ph/0004076.
+\bibitem{bh} S.~C. Benjamin and P.~M. Hayden, ``Comment on `Quantum games and quantum strategies''', Phys. Rev. Lett. \textbf{87}, 069801 (2001), arXiv:quant-ph/0003036.
+\bibitem{ewlreply} J.~Eisert, M.~Wilkens, and M.~Lewenstein, ``Eisert, Wilkens, and Lewenstein reply'', Phys. Rev. Lett. \textbf{87}, 069802 (2001).
+\bibitem{johnson} N.~F. Johnson, ``Playing a quantum game with a corrupted source'', Phys. Rev. A \textbf{63}, 020302(R) (2001), arXiv:quant-ph/0009050.
+\bibitem{chen} J.-L. Chen, L.~C. Kwek, and C.~H. Oh, ``Noisy quantum game'', Phys. Rev. A \textbf{65}, 052320 (2002).
+\bibitem{du} J.~Du, H.~Li, X.~Xu, M.~Shi, J.~Wu, X.~Zhou, and R.~Han, ``Experimental realization of quantum games on a quantum computer'', Phys. Rev. Lett. \textbf{88}, 137902 (2002), arXiv:quant-ph/0104087.
+\bibitem{vanenk} S.~J. van Enk and R.~Pike, ``Classical rules in quantum games'', Phys. Rev. A \textbf{66}, 024306 (2002), arXiv:quant-ph/0203133.
+\bibitem{flitney-review} A.~P. Flitney and D.~Abbott, ``An introduction to quantum game theory'', Fluct. Noise Lett. \textbf{2}, R175 (2002), arXiv:quant-ph/0208069.
+\bibitem{cleve} R.~Cleve, P.~H\o{}yer, B.~Toner, and J.~Watrous, ``Consequences and limits of nonlocal strategies'', Proc. 19th IEEE Conf. on Computational Complexity, 236--249 (2004), arXiv:quant-ph/0404076.
+\bibitem{landsburg} S.~E. Landsburg, ``Quantum game theory'', Notices Amer. Math. Soc. \textbf{51}, 394 (2004).
+\bibitem{flitney-decoh} A.~P. Flitney and D.~Abbott, ``Quantum games with decoherence'', J. Phys. A \textbf{38}, 449 (2005), arXiv:quant-ph/0408070.
+\bibitem{horodecki} R.~Horodecki, P.~Horodecki, and M.~Horodecki, ``Violating Bell inequality by mixed spin-$\tfrac12$ states: necessary and sufficient condition'', Phys. Lett. A \textbf{200}, 340 (1995).
+\bibitem{bolonek} K.~Bolonek-Laso\'n and P.~Kosi\'nski, ``On Nash equilibria in Eisert--Lewenstein--Wilkens game'', Int. J. Quantum Inf. \textbf{13}, 1550066 (2015), arXiv:1509.01843.
+\bibitem{hensen} B.~Hensen \emph{et al.}, ``Loophole-free Bell inequality violation using electron spins separated by 1.3 kilometres'', Nature \textbf{526}, 682 (2015), arXiv:1508.05949.
+\bibitem{notes} Course notes, ``Quantum Information Theory, Topic 9: Qubit decoherence channels'' (2026), Eqs.\ 9.1, 9.2, 9.8, 9.9, 9.15.
 \end{thebibliography}
 \end{document}

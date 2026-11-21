@@ -165,14 +165,14 @@ def figures(out="figures"):
     data = {k: (np.array([[is_nash(Q, g, k, p) for g in gs2] for p in ps2]),
                 np.array([[ewl(Q, Q, g, k, p)[0] for g in gs2] for p in ps2])) for k in kinds}
     vmin = min(d[1].min() for d in data.values()); vmax = max(d[1].max() for d in data.values())
-    fig, axs = plt.subplots(1, 3, figsize=(12, 3.8), sharey=True, layout="constrained")
+    fig, axs = plt.subplots(1, 3, figsize=(7.6, 3.6), sharey=True, layout="constrained")
     for ax, k in zip(axs, kinds):
         im = ax.pcolormesh(gs2, ps2, data[k][1], shading="auto", cmap="viridis", vmin=vmin, vmax=vmax, rasterized=True)
         ax.contour(gs2, ps2, data[k][0].astype(float), levels=[0.5], colors="w", linewidths=2)
-        ax.set_title(titles[k], fontsize=11); ax.set_xlabel(r"entanglement $\gamma$", fontsize=10)
-        ax.tick_params(labelsize=10)
-    axs[0].set_ylabel("noise p", fontsize=10)
-    cb = fig.colorbar(im, ax=axs, label="(Q,Q) payoff", pad=0.02); cb.ax.tick_params(labelsize=10)
+        ax.set_title(titles[k].replace("Amplitude damping", "Ampl. damping"), fontsize=12); ax.set_xlabel(r"entanglement $\gamma$", fontsize=12)
+        ax.tick_params(labelsize=11); ax.set_xticks([0, 0.5, 1.0, 1.5])
+    axs[0].set_ylabel("noise p", fontsize=12)
+    cb = fig.colorbar(im, ax=axs, pad=0.02); cb.set_label("(Q,Q) payoff", fontsize=12); cb.ax.tick_params(labelsize=11)
     fig.savefig(f"{out}/ewl_phase.pdf", metadata=META); plt.close(fig)
     for k in kinds:  # drop the superseded per-channel files
         f = f"{out}/ewl_phase_{k}.pdf"
