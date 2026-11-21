@@ -6,6 +6,7 @@
 \usepackage{amsmath,amssymb,amsthm,physics,graphicx,booktabs,hyperref}
 \usepackage[capitalize]{cleveref}
 \usepackage{enumitem,longtable}
+\makeatletter\setlength{\@fptop}{0pt}\setlength{\@fpsep}{2.5em}\setlength{\@fpbot}{0pt plus 1fil}\makeatother
 \setlist{itemsep=0.3em,topsep=0.3em}
 \setlength{\emergencystretch}{2em}
 \newtheorem{proposition}{Proposition}
@@ -297,7 +298,7 @@ Applying it to $\ket{\Phi^+}$ after the local channels gives the following.
 \end{itemize}
 The optimised thresholds are our headline values; the fixed-setting thresholds ($0.1193$ depolarizing, $0.2308$ amplitude damping, $0.3564$ dephasing) are what a fixed noiseless-optimal experiment sees.
 
-\begin{figure}[tbp]\centering
+\begin{figure}[htbp]\centering
 \includegraphics[width=0.7\linewidth]{../figures/chsh_noise.pdf}
 \caption{CHSH value under the three channels. Solid: settings optimised for the noisy state; dashed: fixed noiseless settings. With optimised settings the violation ($S>2$) is lost at $p^*=0.119$ (depolarizing) and $0.293$ (amplitude damping) and never under dephasing for $p<1$ (analytically; the plot stops at $p=0.75$). The two depolarizing curves coincide. With fixed settings the thresholds are $0.119$, $0.231$ and $0.356$ for depolarizing, amplitude damping and dephasing.}
 \label{fig:chsh}
@@ -307,7 +308,7 @@ The optimised thresholds are our headline values; the fixed-setting thresholds (
 \Cref{fig:phase} shows, over the $(\gamma,p)$ plane, the payoff of $(Q,Q)$ and the boundary of the region where it is a NE in the two-parameter set. \Cref{tab:ewl} lists the entanglement threshold $\gamma^*$ and the payoffs at $\gamma=\pi/2$ for $p=0.1$ and $p=0.3$ only; the phase figure covers $p$ up to $0.6$. The column $\$(D,D)$ is the payoff of the classical profile in the same noisy device, that is, what players earn without using the quantum move.
 
 The thresholds in \cref{tab:ewl} come from bisection on a $41\times21$ deviation grid with bisection tolerance $10^{-4}$ and carry an uncertainty of $\pm0.001$. A $121\times61$ grid and a 60-point scan of $\gamma$ reproduce them to three decimals and show a single switch from non-NE to NE; a $401\times201$ grid gives the same values to four decimals.
-\begin{table}[tbp]\centering\small
+\begin{table}[htbp]\centering\small
 \caption{EWL $(Q,Q)$ equilibrium threshold $\gamma^*$ and payoffs at $\gamma=\pi/2$. The row $p=0$ is analytic; the numerical accuracy of the thresholds is described in the text.}
 \label{tab:ewl}
 \begin{tabular}{lccccccc}
