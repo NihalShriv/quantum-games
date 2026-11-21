@@ -5,7 +5,7 @@
 \setlength{\parindent}{0pt}
 \usepackage{amsmath,amssymb,amsthm,physics,graphicx,booktabs,hyperref}
 \usepackage[capitalize]{cleveref}
-\usepackage{enumitem,longtable,array}
+\usepackage{enumitem,longtable}
 \setlist{itemsep=0.3em,topsep=0.3em}
 \setlength{\emergencystretch}{2em}
 \newtheorem{proposition}{Proposition}
@@ -27,22 +27,6 @@ Quantum game theory asks what changes when the moves of a game are quantum opera
 The second line has been criticised. Benjamin and Hayden showed that the $(Q,Q)$ equilibrium of EWL disappears when players may use any $SU(2)$ operation \cite{bh}. Van Enk and Pike \cite{vanenk} and Landsburg \cite{landsburg} argued that the quantum game is a different classical game with a larger payoff table. Our guiding question is therefore: \emph{in which of the two settings is the advantage of quantum origin, and how robust is each to the noise channels studied in this course?}
 
 \paragraph{Contributions.} (i) Derivations of the CHSH bounds and the EWL equilibrium structure, self-contained except for the cited Horodecki formula; (ii) numerical verification of every analytic claim; (iii) a side-by-side study of both games under the same local channels (Topic 9 of the course notes), including optimised CHSH settings, whose thresholds differ from fixed-setting ones for amplitude damping and dephasing; (iv) a proof that the $9/4$ focal equilibrium of Eisert and Wilkens \cite{ew2000} is a weak equilibrium in which every strategy is a best response, which we have not reconciled with the classification of Bolonek-Laso\'n and Kosi\'nski \cite{bolonek}. Prior studies of noisy EWL games exist \cite{johnson,chen,flitney-decoh}; to our knowledge, the common-channel comparison with CHSH is new.
-
-\paragraph{Course concepts used.} \Cref{tab:course} lists where each course concept enters the project.
-\begin{table}[h]\centering\small
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.46\linewidth}>{\raggedright\arraybackslash}p{0.46\linewidth}}\hline
-course concept & where it is used\\\hline
-Bell/CHSH inequality, Tsirelson bound & CHSH section and \cref{sec:chsh-noise}\\
-entangled states and density matrices & EWL protocol (\cref{sec:protocol}), noisy states\\
-unitary gates and circuits & $J$, $U(\theta,\phi)$, Qiskit circuits (\cref{fig:circuit})\\
-projective and general (POVM) measurement, Naimark dilation & Tsirelson bound for general measurements\\
-Kraus operators, CPTP maps, Bloch-vector action & noise model (\cref{sec:noise})\\
-depolarizing, dephasing, amplitude damping (Topic 9) & both games under noise (\cref{sec:noise})\\
-correlation matrix of a two-qubit state & Horodecki criterion for optimised CHSH\\\hline
-\end{tabular}
-\caption{Course concepts and the sections where they are used.}\label{tab:course}
-\end{table}
-
 \section{Notation}
 This section lists the symbols used throughout the report.
 
