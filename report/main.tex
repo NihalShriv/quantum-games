@@ -5,7 +5,7 @@
 \setlength{\parindent}{0pt}
 \usepackage{amsmath,amssymb,amsthm,physics,graphicx,booktabs,hyperref}
 \usepackage[capitalize]{cleveref}
-\usepackage{enumitem,longtable}
+\usepackage{enumitem,longtable,array}
 \setlist{itemsep=0.3em,topsep=0.3em}
 \setlength{\emergencystretch}{2em}
 \newtheorem{proposition}{Proposition}
@@ -27,6 +27,21 @@ Quantum game theory asks what changes when the moves of a game are quantum opera
 The second line has been criticised. Benjamin and Hayden showed that the $(Q,Q)$ equilibrium of EWL disappears when players may use any $SU(2)$ operation \cite{bh}. Van Enk and Pike \cite{vanenk} and Landsburg \cite{landsburg} argued that the quantum game is a different classical game with a larger payoff table. Our guiding question is therefore: \emph{in which of the two settings is the advantage of quantum origin, and how robust is each to the noise channels studied in this course?}
 
 \paragraph{Contributions.} (i) Derivations of the CHSH bounds and the EWL equilibrium structure, self-contained except for the cited Horodecki formula; (ii) numerical verification of every analytic claim; (iii) a side-by-side study of both games under the same local channels (Topic 9 of the course notes), including optimised CHSH settings, whose thresholds differ from fixed-setting ones for amplitude damping and dephasing; (iv) a proof that the $9/4$ focal equilibrium of Eisert and Wilkens \cite{ew2000} is a weak equilibrium in which every strategy is a best response, which we have not reconciled with the classification of Bolonek-Laso\'n and Kosi\'nski \cite{bolonek}. Prior studies of noisy EWL games exist \cite{johnson,chen,flitney-decoh}; to our knowledge, the common-channel comparison with CHSH is new.
+
+\paragraph{Course concepts used.} \Cref{tab:course} lists where each course concept enters the project.
+\begin{table}[h]\centering\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.46\linewidth}>{\raggedright\arraybackslash}p{0.46\linewidth}}\hline
+course concept & where it is used\\\hline
+Bell/CHSH inequality, Tsirelson bound & CHSH section and \cref{sec:chsh-noise}\\
+entangled states and density matrices & EWL protocol (\cref{sec:protocol}), noisy states\\
+unitary gates and circuits & $J$, $U(\theta,\phi)$, Qiskit circuits (\cref{fig:circuit})\\
+projective and general (POVM) measurement, Naimark dilation & Tsirelson bound for general measurements\\
+Kraus operators, CPTP maps, Bloch-vector action & noise model (\cref{sec:noise})\\
+depolarizing, dephasing, amplitude damping (Topic 9) & both games under noise (\cref{sec:noise})\\
+correlation matrix of a two-qubit state & Horodecki criterion for optimised CHSH\\\hline
+\end{tabular}
+\caption{Course concepts and the sections where they are used.}\label{tab:course}
+\end{table}
 
 \section{Notation}
 This section lists the symbols used throughout the report.
@@ -227,7 +242,7 @@ This section states how every number in the report was computed.
 All figures and all numbers, except the Qiskit cross-checks and the $SU(2)$ equilibrium checks, come from \texttt{qgames.py}; those come from \texttt{qiskit\_circuits.py}, \texttt{mixed\_ne.py} and \texttt{focal\_ne.py}.
 \begin{itemize}
 \item \textbf{Exact evolution.} States are evolved as density matrices in numpy. Each channel is a set of Kraus operators, and in the batched deviation search the same channel acts on both qubits as a $16\times16$ superoperator on $\mathrm{vec}(\rho)$, so a whole batch of Alice's candidate moves is evaluated with one matrix product.
-\item \textbf{NE test.} A symmetric profile $(\Sigma,\Sigma)$ passes if Alice's best payoff over a $41\times21$ grid of $U(\theta,\phi)$ does not exceed her payoff at $\Sigma$ (tolerance $10^{-9}$). The grid has spacing $\pi/40$ in both $\theta$ and $\phi$ and contains $C$, $D$ and $Q$. For a symmetric profile $(\Sigma,\Sigma)$ the payoff table, $J$ and the channels are invariant under exchanging the players, so Bob's deviations give the same answer; the asymmetric mixed equilibrium of \cref{sec:fullsu2} was checked for both players.
+\item \textbf{NE test.} A symmetric profile $(\Sigma,\Sigma)$ passes if Alice's best payoff over a $41\times21$ grid of $U(\theta,\phi)$ does not exceed her payoff at $\Sigma$ (tolerance $10^{-9}$). The grid has spacing $\pi/40$ in both $\theta$ and $\phi$ and contains $C$, $D$ and $Q$. To rule out a profitable deviation between grid points, \texttt{refine\_check.py} starts a bounded optimiser (L-BFGS-B on $\theta\in[0,\pi]$, $\phi\in[0,\pi/2]$) from the five best grid points for both $(Q,Q)$ and $(D,D)$ on a sweep of $3\times13\times25\times2=1950$ cases (3 channels, 13 values $p\in[0,0.6]$, 25 values $\gamma\in[0,\pi/2]$, 2 profiles). The optimiser never beats the grid by more than $10^{-15}$ and changes no NE verdict, so the grid results hold over the continuous two-parameter set to optimiser precision. For a symmetric profile $(\Sigma,\Sigma)$ the payoff table, $J$ and the channels are invariant under exchanging the players, so Bob's deviations give the same answer; the asymmetric mixed equilibrium of \cref{sec:fullsu2} was checked for both players.
 \item \textbf{Thresholds.} The entanglement threshold $\gamma^*$ at which $(Q,Q)$ becomes a NE is found by bisection on this test over $[0,\pi/2]$ with tolerance $10^{-4}$. Bisection assumes a single transition in $\gamma$, which a 400-point scan confirmed for $p=0.1,0.3,0.6$ in all three channels. The CHSH noise thresholds $p^*$ are roots of $S=2$ found with \texttt{scipy.optimize.brentq}.
 \item \textbf{CHSH optimum.} $S_{\max}$ for a given noisy state is computed with the Horodecki criterion (\cref{sec:chsh-noise}), so no search over settings is needed.
 \item \textbf{Cross-checks.} \texttt{qiskit\_circuits.py} implements both games as Qiskit circuits: 20 random EWL cases agree with the numpy model, and a sampled CHSH run with 100\,000 shots per setting gives $S=2.837\pm0.005$, consistent with $2\sqrt2=2.828$ within two standard errors (seed 1). Both Qiskit checks are noiseless and use ideal statevector simulation; the noisy results are numpy only. The expressions \cref{eq:devD,eq:devQ} were verified symbolically with SymPy (\texttt{verify\_sympy.py}). \texttt{mixed\_ne.py} and \texttt{focal\_ne.py} check the mixed equilibria against Haar-random deviations.
@@ -324,7 +339,7 @@ amplitude damping & 0.682 & 2.945 & 1.145 & 0.678 & 2.805 & 1.405\\
 \bottomrule
 \end{tabular}
 \end{table}
-Depolarizing and dephasing noise push the threshold to larger $\gamma$: more entanglement is needed for the quantum equilibrium to exist, and it pays less. Amplitude damping moves the threshold slightly down ($0.678<0.685$ at $p=0.3$). The equilibrium payoff $\$(Q,Q)$ stays above the noisy $\$(D,D)$ in every tested case, but the margin shrinks as noise grows because noise also raises the $(D,D)$ payoff. \Cref{fig:adv} (right) shows this margin at $\gamma=\pi/2$ for $p\le0.6$: it falls to $0.080$ for depolarizing noise, $0.320$ for dephasing and $0.800$ for amplitude damping, and $(Q,Q)$ is still an equilibrium at $\gamma=\pi/2$ at $p=0.6$ for all three channels. Beyond the plotted range, under dephasing $(Q,Q)$ stops being a NE at $\gamma=\pi/2$ at $p\approx0.625$ (the margin stays positive but small), and under depolarizing noise the margin reaches $0$ at $p=3/4$, where every profile pays $9/4$.
+Depolarizing and dephasing noise push the threshold to larger $\gamma$: more entanglement is needed for the quantum equilibrium to exist, and it pays less. Amplitude damping moves the threshold slightly down ($0.678<0.685$ at $p=0.3$). The equilibrium payoff $\$(Q,Q)$ stays above the noisy $\$(D,D)$ in every tested case, but the margin shrinks as noise grows because noise also raises the $(D,D)$ payoff. \Cref{fig:adv} (right) shows this margin at $\gamma=\pi/2$ for $p\le0.6$: it falls to $0.080$ for depolarizing noise, $0.320$ for dephasing and $0.800$ for amplitude damping, and $(Q,Q)$ is still an equilibrium at $\gamma=\pi/2$ at $p=0.6$ for all three channels. Beyond the plotted range, under dephasing $(Q,Q)$ stops being a NE at $\gamma=\pi/2$ at $p\approx0.625$ (the margin stays positive but small), and under depolarizing noise the margin reaches $0$ at $p=3/4$, where every profile pays $9/4$. This last fact is exact. At $p=3/4$ the depolarizing map is $\rho\mapsto\frac14\sum_{\mu=0}^{3}\sigma_\mu\rho\sigma_\mu=\tr(\rho)\,\mathbb I/2$ for every single-qubit $\rho$, and by linearity $(\mathcal E_{3/4}\otimes\mathcal E_{3/4})(\rho)=\tr(\rho)\,\mathbb I/4$ for every two-qubit $\rho$. Then $\rho_f=J^\dagger(\mathbb I/4)J=\mathbb I/4$ whatever $U_A,U_B$ are, each outcome has probability $1/4$, and each player gets $\frac14(3+0+5+1)=9/4$. Every profile is then a weak NE and no strategy carries any advantage. Equivalently, the Bloch shrink factor $1-\frac43p$ is $0$ at $p=3/4$.
 
 \begin{figure}[tbp]\centering
 \includegraphics[width=\linewidth]{../figures/ewl_phase.pdf}
@@ -353,7 +368,7 @@ This section compares the two advantages and states what our simulations can and
 The results above are subject to the following restrictions.
 
 \begin{itemize}
-\item NE checks are grid searches over a $41\times21$ grid of deviations $U(\theta,\phi)$, so a narrow profitable deviation could be missed; thresholds in \cref{tab:ewl} come from bisection (tolerance $10^{-4}$, grid-converged to $\pm0.001$) and the phase diagrams use a $41\times41$ grid over $(\gamma,p)$ (spacing $0.039$ in $\gamma$, $0.015$ in $p$), which limits the resolution of the boundaries in \cref{fig:phase}.
+\item NE checks are grid searches over a $41\times21$ grid of deviations $U(\theta,\phi)$, refined by a local optimiser (\cref{sec:methods}); this is numerical evidence over the continuous set, not a proof, outside the noiseless case where \cref{eq:devD,eq:devQ} give exact maxima; thresholds in \cref{tab:ewl} come from bisection (tolerance $10^{-4}$, grid-converged to $\pm0.001$) and the phase diagrams use a $41\times41$ grid over $(\gamma,p)$ (spacing $0.039$ in $\gamma$, $0.015$ in $p$), which limits the resolution of the boundaries in \cref{fig:phase}.
 \item Noisy equilibria were tested only in the two-parameter strategy set, not in $SU(2)$.
 \item The noisy EWL study covers $p\le0.6$ and one noise placement (after the moves); payoff margins are compared at $\gamma=\pi/2$ only.
 \item Only symmetric, identical channels on both qubits.

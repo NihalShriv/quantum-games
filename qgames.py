@@ -11,7 +11,7 @@ Run:  python qgames.py      (asserts + figures into ./figures)
 """
 import os
 import numpy as np
-from scipy.optimize import brentq
+from scipy.optimize import brentq, minimize
 
 I2 = np.eye(2); X = np.array([[0, 1], [1, 0]]); Y = np.array([[0, -1j], [1j, 0]]); Z = np.diag([1., -1.])
 
@@ -102,6 +102,19 @@ def is_nash(S, g, kind="depolarizing", p=0.0, tol=1e-9):
     base = ewl(S, S, g, kind, p)[0]
     return payoffs_A(GRID, S, g, kind, p).max() <= base + tol
 
+TF = np.array([(t, f) for t in np.linspace(0, np.pi, 41) for f in np.linspace(0, np.pi / 2, 21)])
+
+def best_deviation(S, g, kind="depolarizing", p=0.0, starts=5):
+    """Alice's best payoff against S over the continuous set theta in [0,pi], phi in [0,pi/2]:
+    bounded L-BFGS-B started from the `starts` best grid points. Returns (payoff, theta, phi)."""
+    vals = payoffs_A(GRID, S, g, kind, p)
+    f = lambda x: -payoffs_A(U(*x)[None], S, g, kind, p)[0]
+    best = (vals.max(), *TF[vals.argmax()])
+    for i in np.argsort(vals)[-starts:]:
+        r = minimize(f, TF[i], method="L-BFGS-B", bounds=[(0, np.pi), (0, np.pi / 2)])
+        if -r.fun > best[0]: best = (-r.fun, *r.x)
+    return best
+
 # ---------- self-checks ----------
 def checks():
     assert chsh_classical_max() == 0.75
@@ -121,6 +134,8 @@ def checks():
     assert np.allclose(ewl(C, D, 0), (0, 5)) and np.allclose(ewl(D, C, 0), (5, 0))
     assert is_nash(D, 0.40) and not is_nash(D, 0.50)          # DD NE up to arcsin(1/sqrt5)=0.4636
     assert is_nash(Q, 0.72) and not is_nash(Q, 0.65)          # QQ NE from arcsin(sqrt(2/5))=0.6847
+    rnd = np.random.default_rng(0); A_, B_ = (np.linalg.qr(rnd.normal(size=(2, 2)) + 1j * rnd.normal(size=(2, 2)))[0] for _ in "ab")
+    assert np.allclose(ewl(A_, B_, np.pi / 2, "depolarizing", 0.75), (2.25, 2.25))  # p=3/4: every profile pays 9/4
     print("all checks passed")
 
 META = {"CreationDate": None}  # byte-stable PDFs on rerun
