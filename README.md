@@ -5,14 +5,14 @@ End-semester project, Quantum Information Theory, BITS Goa.
 ## Reproduce
 ```
 pip install -r requirements.txt
-python qgames.py            # self-checks, prints thresholds, writes all figures in figures/ (about one minute)
+python qgames.py            # self-checks, prints thresholds, writes the CHSH and EWL figures in figures/ (about one minute)
 python qiskit_circuits.py   # Qiskit circuits checked against the numpy model
 python mixed_ne.py          # 5/2 mixed Nash equilibrium (full SU(2)), a few minutes
 python focal_ne.py          # 9/4 focal (weak) equilibrium
 python refine_check.py      # optimiser check that the NE grid misses nothing
 python convergence_check.py  # grid convergence, single transition, extra thresholds (under a minute)
 python exact_checks.py       # exact dephasing threshold and classical C/D baseline (SymPy, under a minute)
-python chess_check.py        # quantum chess split/merge under dephasing
+python chess_check.py        # quantum chess split/merge under all three channels; writes figures/chess_*.pdf
 python verify_sympy.py       # symbolic check of the noiseless deviation payoffs
 ```
 Report: `report/main.tex`. Build it with `latexmk -pdf main.tex` inside `report/`.
@@ -26,9 +26,9 @@ Report: `report/main.tex`. Build it with `latexmk -pdf main.tex` inside `report/
 | `refine_check.py` | continuous optimiser check of the grid-based NE test (about two minutes) |
 | `convergence_check.py` | grid-size convergence of the thresholds, single-transition scan, dephasing and amplitude-damping thresholds quoted in the text |
 | `exact_checks.py` | exact noisy EWL results at gamma = pi/2: dephasing threshold 1-1/sqrt7, classical C/D game and its equilibria |
-| `chess_check.py` | quantum chess split and merge under dephasing |
+| `chess_check.py` | quantum chess split and merge under depolarizing, dephasing and amplitude damping; Qiskit cross-check; writes `figures/chess_noise.pdf` and `figures/chess_circuit.pdf` |
 | `verify_sympy.py` | SymPy check of the noiseless deviation payoffs |
-| `figures/` | generated figures used in the report |
+| `figures/` | generated figures used in the report (`chess_*.pdf` from `chess_check.py`, the rest from `qgames.py`) |
 | `report/` | `main.tex` and the built `main.pdf` |
 | `requirements.txt` | pinned Python dependencies |
 

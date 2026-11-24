@@ -6,6 +6,7 @@
 \usepackage{amsmath,amssymb,amsthm,physics,graphicx,booktabs,hyperref}
 \usepackage[capitalize]{cleveref}
 \usepackage{enumitem,longtable}
+\usepackage[section]{placeins}
 \makeatletter\setlength{\@fptop}{0pt}\setlength{\@fpsep}{2.5em}\setlength{\@fpbot}{0pt plus 1fil}\makeatother
 \setlist{itemsep=0.3em,topsep=0.3em}
 \setlength{\emergencystretch}{2em}
@@ -19,7 +20,7 @@
 \maketitle
 
 \begin{abstract}
-We compare two settings in which players share an entangled pair: the Clauser--Horne--Shimony--Holt (CHSH) nonlocal game, a cooperative game against a referee, and the Eisert--Wilkens--Lewenstein (EWL) quantum Prisoner's Dilemma, a non-cooperative game with an arbiter. For CHSH we prove the classical bound $3/4$ and the quantum value $\cos^2(\pi/8)\approx 0.854$ via Tsirelson's bound. For EWL we derive the payoffs, verify that $(D,D)$ is a Nash equilibrium (NE) for $\gamma\le\arcsin(1/\sqrt5)$ and $(Q,Q)$ for $\gamma\ge\arcsin\sqrt{2/5}$ within the two-parameter strategy set, and reproduce the mixed equilibria in the full $SU(2)$ set: a mixed NE with payoff $5/2$ (we prove that no deviation by either player pays more than $5/2$), and the weak focal equilibrium with payoff $9/4$. We then apply the three single-qubit channels of the course (depolarizing, dephasing, amplitude damping) to both games. With measurement settings optimised for the noisy state (Horodecki criterion), the CHSH violation is lost at $p^*=0.119$ for depolarizing noise and $p^*=1-1/\sqrt2=0.293$ for amplitude damping, and under dephasing it survives for every $p<1$, although its margin shrinks like $(1-p)^4$ for $p$ near 1. The EWL $(Q,Q)$ equilibrium survives for all tested noise strengths ($p\le0.6$), but needs more entanglement under depolarizing and dephasing noise and pays less; under dephasing at $\gamma=\pi/2$ we prove that it is lost exactly at $p=1-1/\sqrt7\approx0.622$. Its payoff stays above that of the classical equilibrium $(D,D)$ of the same noisy device for depolarizing noise and amplitude damping, but under dephasing $(D,D)$ itself stops being an equilibrium of the classical game above $p=1-1/\sqrt3\approx0.423$, and the new asymmetric classical equilibria give a higher average payoff than $(Q,Q)$. As a third, contrasting case we analyse the split and merge moves of quantum chess under dephasing: a coherent split can be undone by the merge with probability $(1+(1-p)^2)/2$, compared with $1/2$ for a classical random move, an advantage of coherence that involves no game-theoretic equilibrium. We argue that these ``advantages'' are of different kinds and discuss the van Enk--Pike and Landsburg critiques. The noiseless games are cross-checked in Qiskit; all noisy results come from numpy and SymPy code available in our public repository.
+We compare two settings in which players share an entangled pair: the Clauser--Horne--Shimony--Holt (CHSH) nonlocal game, a cooperative game against a referee, and the Eisert--Wilkens--Lewenstein (EWL) quantum Prisoner's Dilemma, a non-cooperative game with an arbiter. For CHSH we prove the classical bound $3/4$ and the quantum value $\cos^2(\pi/8)\approx 0.854$ via Tsirelson's bound. For EWL we derive the payoffs, verify that $(D,D)$ is a Nash equilibrium (NE) for $\gamma\le\arcsin(1/\sqrt5)$ and $(Q,Q)$ for $\gamma\ge\arcsin\sqrt{2/5}$ within the two-parameter strategy set, and reproduce the mixed equilibria in the full $SU(2)$ set: a mixed NE with payoff $5/2$ (we prove that no deviation by either player pays more than $5/2$), and the weak focal equilibrium with payoff $9/4$. We then apply the three single-qubit channels of the course (depolarizing, dephasing, amplitude damping) to both games. With measurement settings optimised for the noisy state (Horodecki criterion), the CHSH violation is lost at $p^*=0.119$ for depolarizing noise and $p^*=1-1/\sqrt2=0.293$ for amplitude damping, and under dephasing it survives for every $p<1$, although its margin shrinks like $(1-p)^4$ for $p$ near 1. The EWL $(Q,Q)$ equilibrium survives for all tested noise strengths ($p\le0.6$), but needs more entanglement under depolarizing and dephasing noise and pays less; under dephasing at $\gamma=\pi/2$ we prove that it is lost exactly at $p=1-1/\sqrt7\approx0.622$. Its payoff stays above that of the classical equilibrium $(D,D)$ of the same noisy device for depolarizing noise and amplitude damping, but under dephasing $(D,D)$ itself stops being an equilibrium of the classical game above $p=1-1/\sqrt3\approx0.423$, and for $0.423<p\le0.622$ the new asymmetric classical equilibria give a higher average payoff than $(Q,Q)$. As a third, contrasting case we analyse the split and merge moves of quantum chess under the same three channels. We prove that the merge returns a coherently split piece with probability $\bra\psi\rho\ket\psi$, which beats a classical random move by $(1-p)^2/2$ under dephasing, $(1-p)/2$ under amplitude damping and $(1-\frac43p)^2/2$ under depolarizing noise. Under depolarizing noise this margin vanishes only at $p=3/4$, while the entanglement of the two squares is lost at $p=0.317$ and the CHSH violation at $p=0.119$. We argue that these ``advantages'' are of different kinds and discuss the van Enk--Pike and Landsburg critiques. The noiseless games are cross-checked in Qiskit; all noisy results come from numpy and SymPy code available in our public repository.
 \end{abstract}
 
 \section{Introduction}
@@ -27,7 +28,7 @@ Quantum game theory asks what changes when the moves of a game are quantum opera
 
 The second line has been criticised. Benjamin and Hayden showed that the $(Q,Q)$ equilibrium of EWL disappears when players may use any $SU(2)$ operation \cite{bh}. Van Enk and Pike \cite{vanenk} and Landsburg \cite{landsburg} argued that the quantum game is a different classical game with a larger payoff table. Our guiding question is therefore: \emph{in which of the two settings is the advantage of quantum origin, and how robust is each to the noise channels studied in this course?} As a third, contrasting case we include quantum chess \cite{cantwell}, where pieces can be split over two squares and merged back; there the quantum feature at work is coherence between the two branches of one piece, with no equilibrium or Bell test involved.
 
-\paragraph{Contributions.} (i) Derivations of the CHSH bounds and the EWL equilibrium structure, self-contained except for three cited standard results (Naimark dilation, the Ky Fan inequality and the Horodecki formula); (ii) numerical checks of the analytic results that can be computed (payoffs, thresholds, bounds); (iii) a side-by-side study of both games under the same local channels (Topic 9 of the course notes), including optimised CHSH settings, whose thresholds differ from fixed-setting ones for amplitude damping and dephasing; (iv) a proof that the $9/4$ focal equilibrium of Eisert and Wilkens \cite{ew2000} is a weak equilibrium in which every strategy is a best response, which we have not reconciled with the classification of Bolonek-Laso\'n and Kosi\'nski \cite{bolonek}; (v) exact results under dephasing: the $(Q,Q)$ threshold $p=1-1/\sqrt7$, the point $p=1-1/\sqrt3$ above which $(D,D)$ stops being a classical equilibrium, and the quantum chess recovery probability $(1+(1-p)^2)/2$. Prior studies of noisy EWL games exist \cite{johnson,chen,flitney-decoh}; to our knowledge, the common-channel comparison with CHSH is new.
+\paragraph{Contributions.} (i) Derivations of the CHSH bounds and the EWL equilibrium structure, self-contained except for three cited standard results (Naimark dilation, the Ky Fan inequality and the Horodecki formula); (ii) numerical checks of the analytic results that can be computed (payoffs, thresholds, bounds); (iii) a side-by-side study of both games under the same local channels (Topic 9 of the course notes), including optimised CHSH settings, whose thresholds differ from fixed-setting ones for amplitude damping and dephasing; (iv) a proof that the $9/4$ focal equilibrium of Eisert and Wilkens \cite{ew2000} is a weak equilibrium in which every strategy is a best response, which we have not reconciled with the classification of Bolonek-Laso\'n and Kosi\'nski \cite{bolonek}; (v) exact results under dephasing: the $(Q,Q)$ threshold $p=1-1/\sqrt7$, the point $p=1-1/\sqrt3$ above which $(D,D)$ stops being a classical equilibrium, and the quantum chess recovery probabilities under all three channels, and how they compare with the entanglement and CHSH thresholds of the same depolarized states. Prior studies of noisy EWL games exist \cite{johnson,chen,flitney-decoh}; to our knowledge, the common-channel comparison with CHSH is new.
 \section{Notation}
 
 {\small
@@ -49,10 +50,14 @@ $\$_A,\$_B$ & expected payoffs\\
 $\mathcal E_p$ & single-qubit noise channel of strength $p$\\
 $p^*$ & smallest $p$ with $S\le2$ (fixed settings) or $S_{\max}\le2$ (optimised settings)\\
 $k=(1-p)^2$ & coherence factor of dephasing on two qubits\\
-$A_{XY}$ & Alice's payoff at $(X,Y)$, $X,Y\in\{C,D\}$, $\gamma=\pi/2$ (\cref{sec:noise})\\
+$\pi_{XY}$ & Alice's payoff at $(X,Y)$, $X,Y\in\{C,D\}$, $\gamma=\pi/2$ (\cref{sec:noise})\\
 $W,V$ & quantum chess jump (iSWAP) and split gate ($\sqrt{\text{iSWAP}}$)\\
 $\ket\psi,\ket{\psi_\perp}$ & split state of a chess piece and its orthogonal partner\\
-$\rho_q,\rho_c$ & dephased split state and classical 50/50 mixture\\
+$\rho_c$ & classical random move (50/50 mixture)\\
+$P_q,P_c$ & recovery probability of the coherent split and of $\rho_c$\\
+$\eta=1-\frac43p$, $v=\eta^2$ & depolarizing Bloch factor; its two-qubit square\\
+$\ket{\Psi^+}$, $\mathcal N$ & $(\ket{01}+\ket{10})/\sqrt2$; negativity\\
+$\mathcal M$ & quantum chess merge $V_{sa}W_{sb}$\\
 \bottomrule
 \end{longtable}}
 
@@ -197,13 +202,13 @@ so $(f_{00},f_{01},f_{10},f_{11})=(ib_1,ia_2,ia_1,ib_2)$ and $\$_A(U_A,X)=3b_1^2
 \]
 with equality iff $|a|=1$, i.e.\ $U_A$ diagonal. By linearity no mixed deviation does better.
 
-\textbf{Step 4: Bob.} Let $V=\begin{pmatrix}a&b\\-\bar b&\bar a\end{pmatrix}$ answer Alice's mixture $\{\mathbb I,-iZ\}$. From
+\textbf{Step 4: Bob.} Let $G=\begin{pmatrix}a&b\\-\bar b&\bar a\end{pmatrix}$ answer Alice's mixture $\{\mathbb I,-iZ\}$. From
 \[
-(\mathbb I\otimes V)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}+ib\ket{10}+i\bar a\ket{11})
+(\mathbb I\otimes G)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}+ib\ket{10}+i\bar a\ket{11})
 \]
 one gets $P_{CC}=a_1^2$, $P_{DD}=a_2^2$, $P_{CD}=b_1^2$, $P_{DC}=b_2^2$, so $\$_B=3a_1^2+a_2^2+5b_1^2$. From
 \[
-(Z\otimes V)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}-ib\ket{10}-i\bar a\ket{11})
+(Z\otimes G)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}-ib\ket{10}-i\bar a\ket{11})
 \]
 one gets $P_{CC}=a_2^2$, $P_{DD}=a_1^2$, $P_{CD}=b_2^2$, $P_{DC}=b_1^2$, so $\$_B=3a_2^2+a_1^2+5b_2^2$. The average is $2|a|^2+\tfrac52|b|^2=2+\tfrac12|b|^2\le\tfrac52$, with equality iff $a=0$. Hence the profile is a NE.
 
@@ -225,7 +230,7 @@ Bolonek-Laso\'n and Kosi\'nski \cite{bolonek} classify the mixed equilibria of t
 
 \section{Simulation methods}\label{sec:methods}
 
-All figures and most numbers come from \texttt{qgames.py}. The Qiskit cross-checks come from \texttt{qiskit\_circuits.py}, the $SU(2)$ equilibrium checks from \texttt{mixed\_ne.py} and \texttt{focal\_ne.py}, the optimiser and grid-convergence checks from \texttt{refine\_check.py} and \texttt{convergence\_check.py}, the exact noisy EWL results from \texttt{exact\_checks.py}, and the quantum chess results from \texttt{chess\_check.py}.
+Most figures and numbers come from \texttt{qgames.py}. The Qiskit cross-checks come from \texttt{qiskit\_circuits.py}, the $SU(2)$ equilibrium checks from \texttt{mixed\_ne.py} and \texttt{focal\_ne.py}, the optimiser and grid-convergence checks from \texttt{refine\_check.py} and \texttt{convergence\_check.py}, the exact noisy EWL results from \texttt{exact\_checks.py}, and the quantum chess results and \cref{fig:chess} from \texttt{chess\_check.py}.
 \begin{itemize}
 \item \textbf{Exact evolution.} States are evolved as density matrices in numpy. Each channel is a set of Kraus operators, and in the batched deviation search the same channel acts on both qubits as a $16\times16$ superoperator on $\mathrm{vec}(\rho)$, so a whole batch of Alice's candidate moves is evaluated with one matrix product.
 \item \textbf{NE test.} A symmetric profile $(\Sigma,\Sigma)$ passes if Alice's best payoff over a $41\times21$ grid of $U(\theta,\phi)$ does not exceed her payoff at $\Sigma$ (tolerance $10^{-9}$). The grid has spacing $\pi/40$ in both $\theta$ and $\phi$ and contains $C$, $D$ and $Q$. To rule out a profitable deviation between grid points, \texttt{refine\_check.py} starts a bounded optimiser (L-BFGS-B on $\theta\in[0,\pi]$, $\phi\in[0,\pi/2]$) from the five best grid points for both $(Q,Q)$ and $(D,D)$ on a sweep of $3\times13\times25\times2=1950$ cases (3 channels, 13 values $p\in[0,0.6]$, 25 values $\gamma\in[0,\pi/2]$, 2 profiles). The optimiser never beats the grid by more than $9\times10^{-16}$ (rounding level) and changes no NE verdict, so the grid results hold over the continuous two-parameter set to optimiser precision. For a symmetric profile $(\Sigma,\Sigma)$ the payoff table, $J$ and the channels are invariant under exchanging the players, so Bob's deviations give the same answer; the asymmetric mixed equilibrium of \cref{sec:fullsu2} was checked for both players.
@@ -332,18 +337,18 @@ Depolarizing and dephasing noise push the threshold to larger $\gamma$: more ent
 \end{equation}
 At $k=1$ this reduces to the noiseless \cref{eq:devQ} at $\gamma=\pi/2$. The bracket is largest at $\sin^2\phi=1$, where it equals $(7k-1)/2$, and the payoff is linear in $\cos^2\frac\theta2\in[0,1]$. So the best deviation is $Q$ itself ($\theta=0,\phi=\pi/2$, payoff $2+k$) when $7k\ge1$ and $D$ ($\theta=\pi$, payoff $\frac52(1-k)$) when $7k<1$. Hence $(Q,Q)$ is a NE in the two-parameter set iff $(1-p)^2\ge1/7$, i.e.\ $p\le1-1/\sqrt7=0.62204$, in agreement with the bisection value $0.6220$. \texttt{exact\_checks.py} evaluates the density-matrix evolution symbolically and checks \cref{eq:dephQ} against it at 40 random points $(\theta,\phi,p)$.
 
-\paragraph{A classical baseline that is itself an equilibrium.} The margin $\$(Q,Q)-\$(D,D)$ compares the quantum equilibrium with $(D,D)$, which is the right baseline only while $(D,D)$ is an equilibrium of the classical game that the same noisy device induces when both players may use only $C$ and $D$ (no other unitaries). Write $A_{CC},A_{CD},A_{DC},A_{DD}$ for Alice's payoffs at the four profiles at $\gamma=\pi/2$; Bob's payoffs follow by symmetry. In this $2\times2$ game $(D,D)$ is a NE iff $A_{DD}\ge A_{CD}$, $(C,C)$ is a NE iff $A_{CC}\ge A_{DC}$, and $(C,D)$ is a NE iff $A_{CD}\ge A_{DD}$ (Alice) and $A_{DC}\ge A_{CC}$ (Bob). Exact evaluation (\texttt{exact\_checks.py}, symbolic in $p$) gives
+\paragraph{A classical baseline that is itself an equilibrium.} The margin $\$(Q,Q)-\$(D,D)$ compares the quantum equilibrium with $(D,D)$, which is the right baseline only while $(D,D)$ is an equilibrium of the classical game that the same noisy device induces when both players may use only $C$ and $D$ (no other unitaries). Write $\pi_{CC},\pi_{CD},\pi_{DC},\pi_{DD}$ for Alice's payoffs at the four profiles at $\gamma=\pi/2$; Bob's payoffs follow by symmetry. In this $2\times2$ game $(D,D)$ is a NE iff $\pi_{DD}\ge \pi_{CD}$, $(C,C)$ is a NE iff $\pi_{CC}\ge \pi_{DC}$, and $(C,D)$ is a NE iff $\pi_{CD}\ge \pi_{DD}$ (Alice) and $\pi_{DC}\ge \pi_{CC}$ (Bob). Exact evaluation (\texttt{exact\_checks.py}, symbolic in $p$) gives
 \[
 \begin{array}{lcc}
- & A_{DC}-A_{CC} & A_{DD}-A_{CD}\\[2pt]
+ & \pi_{DC}-\pi_{CC} & \pi_{DD}-\pi_{CD}\\[2pt]
 \text{depolarizing} & \frac29(4p-3)^2 & \frac19(4p-3)^2\\[2pt]
 \text{dephasing} & \frac12(3k+1) & \frac12(3k-1)\\[2pt]
 \text{amplitude damping} & \frac12(1-p)(4-p) & \frac12(1-p)(2+p)
 \end{array}
 \]
-For depolarizing noise and amplitude damping both differences are $\ge0$ for every $p\in[0,1]$, so $D$ weakly dominates $C$, $(D,D)$ is a classical equilibrium, and the margin in \cref{fig:adv} is the right comparison. Under dephasing $A_{DC}>A_{CC}$ always, but $A_{DD}<A_{CD}$ once $k<1/3$, i.e.\ $p>1-1/\sqrt3\approx0.423$. Above that value $(D,D)$ is no longer a classical equilibrium. The classical game then has the asymmetric equilibria $(C,D)$ and $(D,C)$ and a symmetric mixed equilibrium. Under dephasing the four payoffs are $A_{CC}=2+k$ (equal to $\$(Q,Q)$), $A_{CD}=\frac52(1-k)$, $A_{DC}=\frac52(1+k)$ and $A_{DD}=2-k$. Since $A_{CD}+A_{DC}=5$, the asymmetric equilibria have average payoff $5/2$. In the symmetric mixed equilibrium each player plays $C$ with the probability $q$ that makes the other indifferent between $C$ and $D$, $q=(A_{DD}-A_{CD})/(A_{CC}-A_{CD}-A_{DC}+A_{DD})=(1-3k)/2$, and the payoff is
+For depolarizing noise and amplitude damping both differences are $\ge0$ for every $p\in[0,1]$, so $D$ weakly dominates $C$, $(D,D)$ is a classical equilibrium, and the margin in \cref{fig:adv} is the right comparison. Under dephasing $\pi_{DC}>\pi_{CC}$ always, but $\pi_{DD}<\pi_{CD}$ once $k<1/3$, i.e.\ $p>1-1/\sqrt3\approx0.423$. Above that value $(D,D)$ is no longer a classical equilibrium. The classical game then has the asymmetric equilibria $(C,D)$ and $(D,C)$ and a symmetric mixed equilibrium. Under dephasing the four payoffs are $\pi_{CC}=2+k$ (equal to $\$(Q,Q)$), $\pi_{CD}=\frac52(1-k)$, $\pi_{DC}=\frac52(1+k)$ and $\pi_{DD}=2-k$. Since $\pi_{CD}+\pi_{DC}=5$, the asymmetric equilibria have average payoff $5/2$. In the symmetric mixed equilibrium each player plays $C$ with the probability $q$ that makes the other indifferent between $C$ and $D$, $q=(\pi_{DD}-\pi_{CD})/(\pi_{CC}-\pi_{CD}-\pi_{DC}+\pi_{DD})=(1-3k)/2$, and the payoff is
 \[
-\$_{\rm mix}=qA_{CC}+(1-q)A_{CD},\qquad \$(Q,Q)-\$_{\rm mix}=\tfrac14(7k-1)(1+3k).
+\$_{\rm mix}=q\pi_{CC}+(1-q)\pi_{CD},\qquad \$(Q,Q)-\$_{\rm mix}=\tfrac14(7k-1)(1+3k).
 \]
 So $(Q,Q)$ beats the symmetric classical equilibrium exactly when $7k\ge1$, i.e.\ exactly where $(Q,Q)$ is itself an equilibrium ($p\le1-1/\sqrt7$). At $p=0.6$ ($k=0.16$): $q=0.26$, $\$_{\rm mix}=2.1156$ and $\$(Q,Q)=2.16$, a margin of $0.044$. For $0.423<p\le0.622$ the quantum equilibrium therefore beats the symmetric classical equilibrium but pays less than the average $5/2$ of the asymmetric ones. Which classical equilibrium players would reach is a question of equilibrium selection that we do not settle; the positive dephasing margin over $(D,D)$ in \cref{fig:adv} above $p\approx0.423$ should be read with this caveat.
 
@@ -360,32 +365,97 @@ So $(Q,Q)$ beats the symmetric classical equilibrium exactly when $7k\ge1$, i.e.
 \end{figure}
 
 \section{A third case: split and merge in quantum chess}\label{sec:chess}
-Quantum chess \cite{cantwell,qchess} adds quantum moves to chess. We study only its basic move pair: a piece is split over two squares and later merged back. This case has no equilibrium and no Bell inequality; it isolates a different quantum feature, coherence between the two branches of one piece.
+Quantum chess \cite{cantwell,qchess} adds quantum moves to chess. We study only its basic move pair: a piece is split over two squares and later merged back. This case has no equilibrium and no Bell inequality; the quantum feature it uses is coherence between the two branches of one piece. We prove how often the merge returns the piece, compare with a classical random move, and apply the three channels of \cref{sec:noise}.
 
-\paragraph{Encoding.} Each square is a qubit, $\ket1$ for occupied and $\ket0$ for empty. We use three squares, a source $s$ and targets $a,b$, ordered $(s,a,b)$. Following Cantwell \cite{cantwell,qchess}, a jump between two squares is the gate $W$ (iSWAP) and a split uses its square root $V$:
+\subsection{Rules and encoding}
+Each square is a qubit, $\ket1$ for occupied and $\ket0$ for empty. We use three squares, a source $s$ and targets $a,b$, ordered $(s,a,b)$. Following Cantwell \cite{cantwell,qchess}, a jump between two squares is the gate $W$ (iSWAP) and a split uses its square root $V$:
 \[
 W=\begin{pmatrix}1&0&0&0\\0&0&i&0\\0&i&0&0\\0&0&0&1\end{pmatrix},\qquad
 V=\begin{pmatrix}1&0&0&0\\0&\frac1{\sqrt2}&\frac i{\sqrt2}&0\\0&\frac i{\sqrt2}&\frac1{\sqrt2}&0\\0&0&0&1\end{pmatrix},\qquad V^2=W .
 \]
-Both are unitary and conserve the number of occupied squares. The split is $W_{sb}V_{sa}$ (right factor first) and the merge is $V_{sa}W_{sb}$.
+Both are unitary and conserve the number of occupied squares. The split is $W_{sb}V_{sa}$ (right factor first) and the merge is $\mathcal M=V_{sa}W_{sb}$. A \emph{classical random move} puts the piece on $a$ or $b$ with probability $1/2$ each, with no phase between the two possibilities. We call the piece \emph{recovered} if, after the merge, the board is exactly $\ket{100}$. \Cref{fig:chesscirc} shows the moves on a board and as a circuit.
 
-\paragraph{Split and merge.} $V_{sa}\ket{100}=(\ket{100}+i\ket{010})/\sqrt2$, and $W_{sb}$ maps $\ket{100}\to i\ket{001}$ and leaves $\ket{010}$ unchanged, so the split gives
+\begin{figure}[htbp]\centering
+\includegraphics[width=\linewidth]{../figures/chess_circuit.pdf}
+\caption{Left: a knight on $s$ is split over $a$ and $b$, each with amplitude $1/\sqrt2$; the grey knights are one piece in superposition, not two pieces. Right: the same move as a circuit on the occupancy qubits $(s,a,b)$. The split is $V$ on $(s,a)$ then $W$ on $(s,b)$; the noise $\mathcal E_p$ acts on the two target squares; the merge applies $W$ then $V$; the piece is recovered if the measured board is $\ket{100}$.}
+\label{fig:chesscirc}
+\end{figure}
+
+\subsection{Split, merge and the classical comparison}
+$V_{sa}\ket{100}=(\ket{100}+i\ket{010})/\sqrt2$, and $W_{sb}$ maps $\ket{100}\to i\ket{001}$ and leaves $\ket{010}$ unchanged, so the split gives
+\begin{equation}
+\ket\psi=\tfrac{i}{\sqrt2}\big(\ket{001}+\ket{010}\big)=\ket0_s\otimes i\ket{\Psi^+}_{ab},\qquad \ket{\Psi^+}=\tfrac1{\sqrt2}(\ket{01}+\ket{10}),\label{eq:split}
+\end{equation}
+one piece on $a$ or $b$ with probability $1/2$ each. Applying the merge, $W_{sb}\ket\psi=\tfrac{i}{\sqrt2}(i\ket{100}+\ket{010})$, and then $V_{sa}$ gives $\tfrac{i}{2}\big[i(\ket{100}+i\ket{010})+(i\ket{100}+\ket{010})\big]=-\ket{100}$. The orthogonal state $\ket{\psi_\perp}=\tfrac{i}{\sqrt2}(\ket{001}-\ket{010})$, with the same square probabilities, is sent by the same steps to $-i\ket{010}$.
+
+\begin{proposition}\label{prop:recovery}
+For any board state $\rho$, the probability that the merge recovers the piece is $P_{\rm rec}(\rho)=\bra\psi\rho\ket\psi$. If the source is empty, $\rho=\ket0\!\bra0_s\otimes\rho_{ab}$, this is $\bra{\Psi^+}\rho_{ab}\ket{\Psi^+}$. In particular the coherent split is recovered with probability $1$ and the classical random move with probability $1/2$.
+\end{proposition}
+\begin{proof}
+Since $\mathcal M\ket\psi=-\ket{100}$ and $\mathcal M$ is unitary, $\mathcal M^\dagger\ket{100}=-\ket\psi$. Hence $P_{\rm rec}(\rho)=\bra{100}\mathcal M\rho\mathcal M^\dagger\ket{100}=\bra\psi\rho\ket\psi$, and \cref{eq:split} gives the second form. For the coherent split $\rho=\ket\psi\!\bra\psi$ and $P_{\rm rec}=1$. The classical move is $\rho_c=\frac12(\ket{001}\!\bra{001}+\ket{010}\!\bra{010})=\frac12(\ket\psi\!\bra\psi+\ket{\psi_\perp}\!\bra{\psi_\perp})$, so $P_{\rm rec}(\rho_c)=\frac12$.
+\end{proof}
+
+The comparison is for a fixed merge operation. A classical rule that simply moved the piece back would also succeed with certainty, so this is not a claim about better chess play: the merge acts as a test that tells a coherent split from a random placement with the same square probabilities.
+
+\subsection{Noise between the moves}
+We model the board as stored on the qubits of a quantum computer, as in Cantwell's implementation \cite{cantwell}, and apply the same single-qubit channel $\mathcal E_p$ (\cref{sec:noise}) to the two target squares, the squares that hold the piece while it waits between split and merge. We leave the empty source noiseless; this is a modelling choice, and noise on the source would only add further ways to fail. The channels then have a direct board meaning. Dephasing never changes the occupation of a square and destroys only the phase between the two branches. Amplitude damping $\ket1\to\ket0$ is loss of the piece. Depolarizing noise can also create a piece on an empty square, which the rules of chess forbid; in the hardware model this is a device error. Any board other than $\ket{100}$ after the merge counts as a failed recovery. The classical move $\rho_c$ is exposed to the same noise, and the gates themselves are taken as ideal.
+
+\begin{proposition}\label{prop:chessnoise}
+With $\eta=1-\frac43p$, $v=\eta^2$ and $k=(1-p)^2$, the recovery probabilities of the coherent split ($P_q$) and of the classical random move ($P_c$) are
 \[
-\ket\psi=\tfrac{i}{\sqrt2}\big(\ket{001}+\ket{010}\big),
+\begin{array}{lccc}
+ & P_q & P_c & P_q-P_c\\[2pt]
+\text{depolarizing} & \frac14(1+3v) & \frac14(1+v) & \frac v2\\[2pt]
+\text{dephasing} & \frac12(1+k) & \frac12 & \frac k2\\[2pt]
+\text{amplitude damping} & 1-p & \frac12(1-p) & \frac12(1-p)
+\end{array}
 \]
-one piece on $a$ or $b$ with probability $1/2$ each. Applying the merge, $W_{sb}\ket\psi=\tfrac{i}{\sqrt2}(i\ket{100}+\ket{010})$, and then $V_{sa}$ gives $\tfrac{i}{2}\big[i(\ket{100}+i\ket{010})+(i\ket{100}+\ket{010})\big]=-\ket{100}$. The merge returns the piece to $s$ with certainty. The orthogonal state $\ket{\psi_\perp}=\tfrac{i}{\sqrt2}(\ket{001}-\ket{010})$, which has the same square probabilities, is sent by the same steps to $-i\ket{010}$ and never returns to $s$.
+for $p\in[0,1]$. In every case $P_q-P_c=\mathrm{Re}\bra{01}\rho_{ab}\ket{10}$, the coherence between the two branches that survives the noise.
+\end{proposition}
+\begin{proof}
+By \cref{prop:recovery} we need $\bra{\Psi^+}\rho_{ab}\ket{\Psi^+}$ for $\rho_{ab}=(\mathcal E_p\otimes\mathcal E_p)(\ket{\Psi^+}\!\bra{\Psi^+})$ and for $\rho_{ab}=(\mathcal E_p\otimes\mathcal E_p)(\rho_c)$, where now $\rho_c=\frac12(\ket{01}\!\bra{01}+\ket{10}\!\bra{10})$. Note $\bra{\Psi^+}\rho_c\ket{\Psi^+}=\frac12$.
 
-\paragraph{Classical comparison.} A classical random move puts the piece on $a$ or $b$ with probability $1/2$, the state $\rho_c=\frac12(\ket{001}\!\bra{001}+\ket{010}\!\bra{010})=\frac12(\ket\psi\!\bra\psi+\ket{\psi_\perp}\!\bra{\psi_\perp})$. It has the same square probabilities as $\ket\psi$ but no phase between the branches, and the merge returns it to $s$ with probability $\frac12\cdot1+\frac12\cdot0=\frac12$.
+\textbf{Depolarizing.} One qubit: $\mathcal E_p(X)=\eta X+(1-\eta)\tr(X)\,\mathbb I/2$ (the Bloch shrink of \cref{sec:noise}). On two qubits, $(\mathcal E_p\otimes\mathcal E_p)(\rho)=\eta^2\rho+\eta(1-\eta)\big(\rho_a\otimes\frac{\mathbb I}2+\frac{\mathbb I}2\otimes\rho_b\big)+(1-\eta)^2\frac{\mathbb I}4$. Both states have marginals $\rho_a=\rho_b=\mathbb I/2$, so each becomes $v\rho+(1-v)\mathbb I/4$. With $\bra{\Psi^+}\mathbb I/4\ket{\Psi^+}=\frac14$: $P_q=v+\frac{1-v}4$ and $P_c=\frac v2+\frac{1-v}4$.
 
-\paragraph{Dephasing between the moves.} Between split and merge we apply the course dephasing channel to every square. We use only dephasing because its Kraus operators are diagonal in the occupancy basis: it never creates or removes a piece. Depolarizing noise and amplitude damping would create or remove pieces, which the rules of chess do not allow. Dephasing leaves the diagonal of $\ket\psi\!\bra\psi$ unchanged and multiplies the coherence $\ket{001}\!\bra{010}$, in which two squares differ, by $(1-p)^2=k$. So
+\textbf{Dephasing.} Each qubit's off-diagonal elements are multiplied by $1-p$ and its diagonal is unchanged. In $\ket{\Psi^+}\!\bra{\Psi^+}=\frac12(\ket{01}\!\bra{01}+\ket{10}\!\bra{10}+\ket{01}\!\bra{10}+\ket{10}\!\bra{01})$ the cross terms differ on both qubits and are multiplied by $k$; so $P_q=\frac12(1+k)$. $\rho_c$ is diagonal and unchanged, $P_c=\frac12$.
+
+\textbf{Amplitude damping.} With $K_0\ket0=\ket0$, $K_0\ket1=\sqrt{1-p}\ket1$, $K_1\ket1=\sqrt p\ket0$, $K_1\ket0=0$: $(K_0\otimes K_0)\ket{\Psi^+}=\sqrt{1-p}\ket{\Psi^+}$, $(K_1\otimes K_0)\ket{\Psi^+}=(K_0\otimes K_1)\ket{\Psi^+}=\sqrt{p/2}\ket{00}$ and $(K_1\otimes K_1)\ket{\Psi^+}=0$. Summing the four terms, $\rho_{ab}=(1-p)\ket{\Psi^+}\!\bra{\Psi^+}+p\ket{00}\!\bra{00}$, and in the same way $\rho_c\mapsto(1-p)\rho_c+p\ket{00}\!\bra{00}$. Since $\braket{\Psi^+|00}=0$, $P_q=1-p$ and $P_c=\frac12(1-p)$.
+
+\textbf{Margin.} For any $\rho_{ab}$, $\bra{\Psi^+}\rho_{ab}\ket{\Psi^+}=\frac12(\rho_{01,01}+\rho_{10,10})+\mathrm{Re}\,\rho_{01,10}$. In all three cases the noisy coherent and classical states have the same diagonal, and the classical one has $\rho_{01,10}=0$, so the difference is $\mathrm{Re}\,\rho_{01,10}$: $v/2$, $k/2$ and $(1-p)/2$.
+\end{proof}
+
+\begin{table}[htbp]\centering\small
+\caption{Quantum chess recovery probabilities from \cref{prop:chessnoise}: coherent split $P_q$, classical random move $P_c$, and the negativity $\mathcal N$ of the two target squares after noise.}
+\label{tab:chess}
+\begin{tabular}{lcccccc}
+\toprule
+channel & \multicolumn{3}{c}{$p=0.3$} & \multicolumn{3}{c}{$p=0.6$}\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & $P_q$ & $P_c$ & $\mathcal N$ & $P_q$ & $P_c$ & $\mathcal N$\\
+\midrule
+depolarizing & 0.520 & 0.340 & 0.020 & 0.280 & 0.260 & 0\\
+dephasing & 0.745 & 0.500 & 0.245 & 0.580 & 0.500 & 0.080\\
+amplitude damping & 0.700 & 0.350 & 0.231 & 0.400 & 0.200 & 0.061\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]\centering
+\includegraphics[width=\linewidth]{../figures/chess_noise.pdf}
+\caption{Quantum chess under the course channels. Left: probability that the merge returns the piece, for the coherent split (solid) and a classical random move (dashed). The coherent split does better for every $p<1$, except under depolarizing noise at $p=3/4$, where both give $1/4$. Right: depolarizing noise, which maps both $\ket{\Psi^+}$ and $\ket{\Phi^+}$ to $v\rho+(1-v)\mathbb I/4$. The chess recovery margin $v/2$ is zero only at $p=3/4$ (and small but positive beyond it), the negativity of the target pair is zero from $p=0.317$, and the CHSH violation of $\ket{\Phi^+}$, plotted as $(S-2)/4$, is zero from $p=0.119$; only the zeros of the three curves are compared.}
+\label{fig:chess}
+\end{figure}
+
+\subsection{Coherence, entanglement and nonlocality}
+In occupation-number language the split leaves the two target squares in $\ket{\Psi^+}$, an entangled state. For the noisy states the negativity $\mathcal N$ (sum of the moduli of the negative eigenvalues of the partial transpose) is
 \[
-\rho_q=\tfrac{1+k}2\ket\psi\!\bra\psi+\tfrac{1-k}2\ket{\psi_\perp}\!\bra{\psi_\perp},
-\qquad
-P_{\rm rec}(\rho_q)=\frac{1+k}2,\qquad P_{\rm rec}(\rho_c)=\frac12 .
+\mathcal N=\max\big(0,\tfrac{3v-1}4\big),\qquad \tfrac k2,\qquad \tfrac12\Big(\sqrt{p^2+(1-p)^2}-p\Big)
 \]
-The classical mixture is unchanged by dephasing. The recovery margin $k/2$ falls from $1/2$ at $p=0$ to $0.245$ at $p=0.3$ and $0.080$ at $p=0.6$, and vanishes only at $p=1$. As in CHSH under dephasing, the quantum feature weakens smoothly and never has a threshold.
+for depolarizing noise, dephasing and amplitude damping. For depolarizing noise the partial transpose of $v\ket{\Psi^+}\!\bra{\Psi^+}+(1-v)\mathbb I/4$ has eigenvalues $\frac{1+v}4$ (three times) and $\frac{1-3v}4$. Under dephasing it has eigenvalues $\frac12,\frac12,\pm\frac k2$. Under amplitude damping its $\{\ket{00},\ket{11}\}$ block is $\begin{pmatrix}p&(1-p)/2\\(1-p)/2&0\end{pmatrix}$, with eigenvalues $\frac12\big(p\pm\sqrt{p^2+(1-p)^2}\big)$. This is single-particle (mode) entanglement, whose status as a resource is debated \cite{vanenk-single}, so we attribute the recovery advantage to coherence.
 
-\paragraph{What this shows.} The merge distinguishes a coherent split from a classical random move with the same square probabilities, and the size of the difference is exactly half the surviving coherence. This is an advantage for a fixed, given merge operation, not a better chess strategy: a classical rule that simply moved the piece back would also succeed with certainty. In occupation-number language the two target squares are entangled: tracing out the empty source leaves $\rho_{ab}=\frac12(\ket{01}\!\bra{01}+\ket{10}\!\bra{10})+\frac k2(\ket{01}\!\bra{10}+\ket{10}\!\bra{01})$, whose partial transpose has eigenvalues $\frac12,\frac12,\frac k2,-\frac k2$, so the negativity is $k/2$. But this is single-particle (mode) entanglement, whose status as a resource is debated \cite{vanenk-single}, so we describe the effect as coherence. \texttt{chess\_check.py} checks the split and merge states, the decomposition of $\rho_q$, both recovery probabilities and the negativity for 101 values of $p$.
+Depolarizing noise separates the two notions. The target pair is entangled only while $v>1/3$, i.e.\ $p<\frac34(1-1/\sqrt3)=0.317$, but the recovery margin $v/2$ is positive for every $p\ne3/4$: for $0.317<p<3/4$ the merge still tells the coherent split from the classical move although the two squares are no longer entangled. The CHSH state of \cref{sec:chsh-noise} is related to $\ket{\Psi^+}$ by $X$ on one qubit, and local depolarizing noise commutes with local unitaries, so it is depolarized in the same way, $\ket{\Phi^+}\!\bra{\Phi^+}\mapsto v\ket{\Phi^+}\!\bra{\Phi^+}+(1-v)\mathbb I/4$; with settings rotated accordingly the two states have the same CHSH value. Its CHSH violation is lost already at $v=1/\sqrt2$, $p=0.119$. These are the known thresholds of the Werner family \cite{werner}, here read off along one noise parameter: CHSH violation for $p<0.119$, entanglement for $p<0.317$ and a nonzero recovery margin for all $p\ne3/4$ (\cref{fig:chess}, right). The other two channels never remove the recovery margin before $p=1$.
+
+\texttt{chess\_check.py} builds the gates, checks \cref{eq:split}, the merge, \cref{prop:recovery} on random states, and \cref{prop:chessnoise} and the negativities for all three channels at 101 values of $p\in[0,1]$, using the same density-matrix model as the other games. It also runs the noiseless split and merge with Qiskit's \texttt{iSwapGate} and its square root and checks that the outcome probabilities agree.
 
 \section{Discussion}
 
@@ -393,7 +463,7 @@ The classical mixture is unchanged by dephasing. The recovery margin $k/2$ falls
 
 \paragraph{The threshold depends on the settings and the channel.} Under depolarizing noise the state is Werner-type and the noisy state is the Werner state $\eta^2\ket{\Phi^+}\!\bra{\Phi^+}+(1-\eta^2)\mathbb I/4$, every correlator scales by $\eta^2$, and fixed and optimised settings give the same threshold $p^*=0.119$. Under amplitude damping, re-optimising the settings moves the threshold from $0.231$ to $0.293$. Under dephasing the Bell violation never disappears for $p<1$ once the settings are optimised, because the $Z\otimes Z$ correlation stays intact and the two remaining correlations scale as $(1-p)^2$; the margin $2\sqrt{1+(1-p)^4}-2\approx(1-p)^4$ for $p$ near 1 is $0.025$ at $p=0.6$ and $10^{-4}$ at $p=0.9$; resolving a margin of $10^{-4}$ in $S$ would need of order $10^{8}$ shots per setting, since the standard error falls like $1/\sqrt N$. The ``sharp threshold'' picture therefore holds for two of the three channels, and a fixed experiment sees a threshold for all three. Even so, the CHSH margin reaches zero at moderate noise for two channels, while the EWL margin over noisy $(D,D)$ stays positive in all three for $p\le0.6$ (\cref{fig:adv}); beyond that range the dephasing equilibrium is lost at $p=1-1/\sqrt7\approx0.622$ and the depolarizing margin reaches zero at $p=3/4$. Under dephasing the classical baseline itself changes above $p\approx0.423$; for $0.423<p\le0.622$ the asymmetric classical equilibria pay more on average than $(Q,Q)$. The two margins have different units and baselines, so only their signs are compared.
 
-\paragraph{Coherence without a game.} The quantum chess split is the simplest of the three cases. Its advantage needs neither nonlocality nor an equilibrium, only phase coherence between two branches, and under dephasing it decays like $(1-p)^2$ without a threshold, as the CHSH margin does under the same channel. In chess the quantum effect is interference within one player's own move, which is a different thing from the nonlocal correlations of CHSH and from the changed equilibria of EWL.
+\paragraph{Coherence without a game.} The quantum chess margin comes from phase coherence between the two branches of one piece, measured by a fixed merge. It involves no opponent and no Bell test. Under dephasing and amplitude damping it survives up to $p=1$, and under depolarizing noise it remains after the entanglement of the two squares and the CHSH violation of the same depolarized states are gone (\cref{fig:chess}). In chess the quantum effect is interference within one player's own move.
 
 \paragraph{Dependence on the strategy set.} The $(Q,Q)$ result holds only in the restricted set; in $SU(2)$ the equilibria we reproduced pay $5/2$ (mixed) and $9/4$ (focal). Both are above the $(D,D)$ payoff $1$ and below the cooperative $3$, which is not an equilibrium, so the dilemma remains, in a milder form.
 
@@ -409,15 +479,15 @@ The classical mixture is unchanged by dephasing. The recovery margin $k/2$ falls
 \item Only symmetric, identical channels on both qubits.
 \item All results are simulations: no hardware noise or finite-shot statistics, except the noiseless sampled CHSH check.
 \item The CHSH and EWL margins have different units and are not placed on a common scale.
-\item The quantum chess study covers one split and one merge on three isolated squares under dephasing only; it does not model a full game, other moves, measurement moves or strategy.
+\item The quantum chess study covers one split and one merge on three isolated squares, with noise on the two target squares only; it does not model a full game, other moves, measurement moves or strategy.
 \end{itemize}
 
 \section{Conclusion}
 
-Entanglement gives the CHSH players an advantage that a loophole-free Bell test can certify and that noise can remove: with optimised settings it is lost at $p^*=0.119$ for depolarizing noise and $p^*=0.293$ for amplitude damping, while under dephasing it survives for all $p<1$ with a rapidly shrinking margin. A fixed noiseless experiment loses it at $0.119$, $0.231$ and $0.356$ respectively. In the EWL Prisoner's Dilemma entanglement changes the equilibrium structure. The quantum equilibrium pays more than the classical equilibrium $(D,D)$ at every tested noise level ($p\le0.6$) for depolarizing noise and amplitude damping. Under dephasing it is lost at $p=1-1/\sqrt7$, and for $1-1/\sqrt3<p\le1-1/\sqrt7$ it beats the symmetric classical equilibrium but pays less than the average $5/2$ of the asymmetric ones. The result also depends on the chosen strategy set and, according to van Enk and Pike and Landsburg, can be reproduced by a classical game with an enlarged payoff table. Only the cooperative, nonlocal advantage can be certified by a Bell test. In quantum chess a coherent split can be undone by the merge with probability $(1+(1-p)^2)/2$ under dephasing, against $1/2$ for a classical random move; this advantage comes from coherence alone. \Cref{tab:summary} collects the main results.
+Entanglement gives the CHSH players an advantage that a loophole-free Bell test can certify and that noise can remove: with optimised settings it is lost at $p^*=0.119$ for depolarizing noise and $p^*=0.293$ for amplitude damping, while under dephasing it survives for all $p<1$ with a rapidly shrinking margin. A fixed noiseless experiment loses it at $0.119$, $0.231$ and $0.356$ respectively. In the EWL Prisoner's Dilemma entanglement changes the equilibrium structure. The quantum equilibrium pays more than the classical equilibrium $(D,D)$ at every tested noise level ($p\le0.6$) for depolarizing noise and amplitude damping. Under dephasing it is lost at $p=1-1/\sqrt7$, and for $1-1/\sqrt3<p\le1-1/\sqrt7$ it beats the symmetric classical equilibrium but pays less than the average $5/2$ of the asymmetric ones. The result also depends on the chosen strategy set and, according to van Enk and Pike and Landsburg, can be reproduced by a classical game with an enlarged payoff table. Only the cooperative, nonlocal advantage can be certified by a Bell test. In quantum chess the merge returns a coherently split piece more often than a classical random move under all three channels, for every $p<1$ except $p=3/4$ under depolarizing noise. For this merge test the margin equals the surviving coherence between the two branches, and under depolarizing noise it remains after entanglement and CHSH violation are lost. \Cref{tab:summary} collects the main results.
 
 \begin{table}[tbp]\centering\small
-\caption{Summary of results: analytic value and numerical value for each quantity. CHSH thresholds are for optimised settings; the fixed-setting thresholds are $0.1193$, $0.2308$ and $0.3564$ (depolarizing, amplitude damping, dephasing). Numerics come from \texttt{qgames.py}, except the two equilibrium rows (\texttt{mixed\_ne.py}, \texttt{focal\_ne.py}) and the last three rows (\texttt{convergence\_check.py}, \texttt{exact\_checks.py}, \texttt{chess\_check.py}).}
+\caption{Summary of results: analytic value and numerical value for each quantity. CHSH thresholds are for optimised settings; the fixed-setting thresholds are $0.1193$, $0.2308$ and $0.3564$ (depolarizing, amplitude damping, dephasing). Numerics come from \texttt{qgames.py}, except the two equilibrium rows (\texttt{mixed\_ne.py}, \texttt{focal\_ne.py}) the dephasing $(Q,Q)$ row (\texttt{convergence\_check.py} for the bisection value, \texttt{exact\_checks.py} for the exact one), the classical $(D,D)$ row (\texttt{exact\_checks.py}) and the chess rows (\texttt{chess\_check.py}).}
 \label{tab:summary}
 \begin{tabular}{lp{0.29\linewidth}p{0.29\linewidth}}
 \toprule
@@ -433,8 +503,9 @@ CHSH $p^*$, depolarizing & $\tfrac34(1-2^{-1/4})$ & $0.1193$\\
 CHSH $p^*$, amplitude damping & $1-1/\sqrt2$ & $0.2929$\\
 CHSH $p^*$, dephasing & $S_{\max}=2\sqrt{1+(1-p)^4}>2$ for $p<1$ & $S_{\max}=2.0001$ at $p=0.9$\\
 $(Q,Q)$ lost at $\gamma=\pi/2$, dephasing & $p=1-1/\sqrt7=0.62204$ & $0.6220$ (bisection)\\
-classical $(D,D)$ lost, dephasing & $p=1-1/\sqrt3=0.4226$ & sign of $A_{DD}-A_{CD}$ checked at 1001 values of $p$\\
-chess recovery, dephasing & $(1+(1-p)^2)/2$ vs $1/2$ & checked at 101 values of $p$\\
+classical $(D,D)$ lost, dephasing & $p=1-1/\sqrt3=0.4226$ & symbolic; sign also checked at 1001 values of $p$\\
+chess recovery margin & $\frac{(1-\frac43p)^2}2$, $\frac{(1-p)^2}2$, $\frac{1-p}2$ (depol., deph., AD) & checked at 101 values of $p\in[0,1]$ per channel\\
+depolarizing: entanglement lost & $p=\frac34(1-1/\sqrt3)=0.317$ & checked\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -443,7 +514,7 @@ chess recovery, dephasing & $(1+(1-p)^2)/2$ vs $1/2$ & checked at 101 values of 
 \begingroup\sloppy\texttt{python qgames.py} (about one minute) runs the self-checks, prints the thresholds and regenerates every figure; the implementation details are in \cref{sec:methods}. Pinned versions are in \texttt{requirements.txt} (numpy~2.5.1, scipy~1.17.1, matplotlib~3.11.1, qiskit~2.6.1, qiskit-aer~0.18.2, sympy~1.14.0; Python~3.12). \texttt{qiskit\_circuits.py} runs the Qiskit cross-checks, \texttt{mixed\_ne.py} (a few minutes, seed 0) and \texttt{focal\_ne.py} the $SU(2)$ equilibrium checks, \texttt{verify\_sympy.py} and \texttt{exact\_checks.py} the symbolic checks, \texttt{refine\_check.py} and \texttt{convergence\_check.py} the optimiser and grid-convergence checks, and \texttt{chess\_check.py} the quantum chess calculation, each run as \texttt{python <file>}.\par\endgroup All code is available at \url{https://github.com/NihalShriv/quantum-games}.
 
 \section*{Use of AI tools}
-We used an AI assistant to search for references, to clarify concepts, and to help write the simulation code. Every reference was opened and checked against its journal record or arXiv entry, and every derivation and numerical result in this report was verified by us.
+We used an AI assistant to search for references, to clarify concepts, and to help write the simulation code. Every reference was opened and checked against its journal record or arXiv entry, and every derivation and numerical result in this report was verified by us. Several claims produced with AI help were wrong and were corrected in this way, for example a mixed equilibrium first described as strict and a threshold first given as $0.625$ instead of $1-1/\sqrt7$.
 
 \appendix
 \section{Derivation of the deviation probabilities}\label{app:derivation}
@@ -502,6 +573,7 @@ So $P_{CC}=c^2(\sin^2\phi+\cos^2\gamma\cos^2\phi)=c^2(1-\sin^2\gamma\cos^2\phi)$
 \bibitem{horodecki} R.~Horodecki, P.~Horodecki, and M.~Horodecki, ``Violating Bell inequality by mixed spin-$\tfrac12$ states: necessary and sufficient condition'', Phys. Lett. A \textbf{200}, 340 (1995).
 \bibitem{bolonek} K.~Bolonek-Laso\'n and P.~Kosi\'nski, ``On Nash equilibria in Eisert--Lewenstein--Wilkens game'', Int. J. Quantum Inf. \textbf{13}, 1550066 (2015), arXiv:1509.01843.
 \bibitem{hensen} B.~Hensen \emph{et al.}, ``Loophole-free Bell inequality violation using electron spins separated by 1.3 kilometres'', Nature \textbf{526}, 682 (2015), arXiv:1508.05949.
+\bibitem{werner} R.~F. Werner, ``Quantum states with Einstein-Podolsky-Rosen correlations admitting a hidden-variable model'', Phys.\ Rev.\ A \textbf{40}, 4277 (1989).
 \bibitem{cantwell} C.~Cantwell, ``Quantum Chess: Developing a Mathematical Framework and Design Methodology for Creating Quantum Games'', arXiv:1906.05836 (2019).
 \bibitem{qchess} C.~Cantwell, Quantum Chess documentation, ``Mathematics'', \url{https://cantwellc.github.io/QuantumChessDocs/math} (accessed November 2026).
 \bibitem{vanenk-single} S.~J. van Enk, ``Single-particle entanglement'', Phys.\ Rev.\ A \textbf{72}, 064306 (2005).
