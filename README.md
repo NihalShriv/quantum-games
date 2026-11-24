@@ -27,7 +27,7 @@ Report: `report/main.tex`. Build it with `latexmk -pdf main.tex` inside `report/
 | `convergence_check.py` | grid-size convergence of the thresholds, single-transition scan, dephasing and amplitude-damping thresholds quoted in the text |
 | `exact_checks.py` | exact noisy EWL results at gamma = pi/2: dephasing threshold 1-1/sqrt7, classical C/D game and its equilibria |
 | `chess_check.py` | quantum chess split and merge under depolarizing, dephasing and amplitude damping; Qiskit cross-check; writes `figures/chess_noise.pdf` and `figures/chess_circuit.pdf` |
-| `verify_sympy.py` | SymPy check of the noiseless deviation payoffs |
+| `verify_sympy.py` | SymPy check of the noiseless deviation payoffs, the SU(2) mixed-equilibrium payoffs and the Benjamin-Hayden construction |
 | `figures/` | generated figures used in the report (`chess_*.pdf` from `chess_check.py`, the rest from `qgames.py`) |
 | `report/` | `main.tex` and the built `main.pdf` |
 | `requirements.txt` | pinned Python dependencies |

@@ -1,4 +1,4 @@
-"""Backs the convergence and threshold claims in the report (about five minutes):
+"""Backs the convergence and threshold claims in the report (under a minute):
 1. gamma* at p=0.1, 0.3 on 41x21, 121x61 and 401x201 deviation grids;
 2. a single non-NE -> NE switch along a 400-point gamma scan (p=0.1, 0.3, 0.6, all channels);
 3. continuous optimiser check of (Q,Q) just above each gamma*;

@@ -65,6 +65,14 @@ for kind in KINDS:
         assert np.isclose(rec(R), np.real(psi.conj() @ R @ psi))
         assert np.allclose([rec(rq), rec(rc), negativity(rq)], closed(kind, p)), (kind, p)
         assert np.isclose(np.trace(rq).real, 1) and np.isclose(np.trace(rc).real, 1)
+        r2 = rq.reshape(2, 4, 2, 4).trace(axis1=0, axis2=2).reshape(2, 2, 2, 2).transpose(0, 3, 2, 1).reshape(4, 4)
+        ev = np.sort(np.linalg.eigvalsh(r2))   # partial-transpose spectra quoted in the report
+        if kind == "dephasing":
+            k = (1 - p) ** 2; assert np.allclose(ev, np.sort([0.5, 0.5, k / 2, -k / 2]))
+        elif kind == "depolarizing":
+            v = (1 - 4 * p / 3) ** 2; assert np.allclose(ev, np.sort([(1 + v) / 4] * 3 + [(1 - 3 * v) / 4]))
+        else:
+            d = np.sqrt(p ** 2 + (1 - p) ** 2); assert np.allclose(ev, np.sort([(1 - p) / 2, (1 - p) / 2, (p + d) / 2, (p - d) / 2]))
 
 # separability point and zero of the margin under depolarizing noise
 p_sep = 0.75 * (1 - 1 / np.sqrt(3))
