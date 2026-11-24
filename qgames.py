@@ -241,7 +241,7 @@ def thresholds():
           f"(Q,Q) NE from gamma={gamma_star('depolarizing', 0.0):.4f} (arcsin(sqrt(2/5))={np.arcsin(np.sqrt(0.4)):.4f})")
     print("EWL (Q,Q) NE threshold gamma*, and payoffs at gamma=pi/2")
     for k in kinds:
-        for p in (0.1, 0.3):
+        for p in (0.1, 0.3, 0.6):
             print(f"  {k:13s} p={p}: gamma*={gamma_star(k, p):.3f}  $(Q,Q)={ewl(Q, Q, np.pi / 2, k, p)[0]:.3f}  "
                   f"$(D,D)={ewl(D, D, np.pi / 2, k, p)[0]:.3f}")
     print("margins at p=0.6: " + "; ".join(f"{k}: CHSH S_max-2={chsh_optimal(k, 0.6) - 2:.3f}, EWL $(Q,Q)-$(D,D)="

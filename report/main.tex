@@ -164,17 +164,17 @@ Du \emph{et al.}~\cite{du} report two entanglement thresholds separating classic
 \subsection{Full \texorpdfstring{$SU(2)$}{SU(2)}: no pure equilibrium, two mixed ones}\label{sec:fullsu2}
 Benjamin and Hayden \cite{bh} showed that at $\gamma=\pi/2$, for any $U_B$ there is a $U_A$ giving Alice $5$ (see also the reply \cite{ewlreply}). A short proof follows.
 
-\textbf{Step 1: rewrite the entangled state.} Let $\ket\Phi=\ket{00}+\ket{11}$ and $P=\mathrm{diag}(1,i)$. Then $J\ket{00}=\tfrac1{\sqrt2}(\mathbb I\otimes P)\ket\Phi$, and for any matrices $(A\otimes B)\ket\Phi=(AB^{T}\otimes\mathbb I)\ket\Phi$.
+\textbf{Step 1: rewrite the entangled state.} Let $\ket\Phi=\ket{00}+\ket{11}$ and $\Lambda=\mathrm{diag}(1,i)$. Then $J\ket{00}=\tfrac1{\sqrt2}(\mathbb I\otimes \Lambda)\ket\Phi$, and for any matrices $(A\otimes B)\ket\Phi=(AB^{T}\otimes\mathbb I)\ket\Phi$.
 
 \textbf{Step 2: the target state.} $J\ket{10}=\tfrac1{\sqrt2}(\ket{10}-i\ket{01})=\tfrac1{\sqrt2}(M\otimes\mathbb I)\ket\Phi$ with $M=\ket1\bra0-i\ket0\bra1$ unitary.
 
 \textbf{Step 3: the counter-move.} Choose
 \[
-U_A=M\,\overline{U_B}\,P^\dagger\qquad(\text{unitary, with }\overline{U_B}=(U_B^{T})^{-1}).
+U_A=M\,\overline{U_B}\,\Lambda^\dagger\qquad(\text{unitary, with }\overline{U_B}=(U_B^{T})^{-1}).
 \]
 Then
 \[
-(U_A\otimes U_B)J\ket{00}=\tfrac1{\sqrt2}(U_AP\,U_B^{T}\otimes\mathbb I)\ket\Phi=\tfrac1{\sqrt2}(M\otimes\mathbb I)\ket\Phi=J\ket{10},
+(U_A\otimes U_B)J\ket{00}=\tfrac1{\sqrt2}(U_A\Lambda\,U_B^{T}\otimes\mathbb I)\ket\Phi=\tfrac1{\sqrt2}(M\otimes\mathbb I)\ket\Phi=J\ket{10},
 \]
 so $\ket{\psi_f}=J^\dagger J\ket{10}=\ket{DC}$ and $\$_A=5$, $\$_B=0$. The global phase of $U_A$ is irrelevant, so $U_A$ may be taken in $SU(2)$; it need not lie in the two-parameter set.
 
@@ -187,25 +187,25 @@ so $\ket{\psi_f}=J^\dagger J\ket{10}=\ket{DC}$ and $\$_A=5$, $\$_B=0$. The globa
 f_{00}=\tfrac{\alpha_{00}-i\alpha_{11}}{\sqrt2},\quad f_{11}=\tfrac{\alpha_{11}-i\alpha_{00}}{\sqrt2},\quad f_{01}=\tfrac{\alpha_{01}+i\alpha_{10}}{\sqrt2},\quad f_{10}=\tfrac{\alpha_{10}+i\alpha_{01}}{\sqrt2}.
 \]
 
-\textbf{Step 1: Alice against $D$.} We have
+\textbf{Step A: Alice against $D$.} We have
 \[
 (U_A\otimes D)J\ket{00}=\tfrac1{\sqrt2}(ib\ket{00}-a\ket{01}+i\bar a\ket{10}+\bar b\ket{11}),
 \]
 so $(f_{00},f_{01},f_{10},f_{11})=(-b_2,-a_1,a_2,b_1)$, i.e.\ $P_{CC}=b_2^2$, $P_{CD}=a_1^2$, $P_{DC}=a_2^2$, $P_{DD}=b_1^2$ and $\$_A(U_A,D)=3b_2^2+5a_2^2+b_1^2$.
 
-\textbf{Step 2: Alice against $-iX\sim X$} (a global phase does not matter). We have
+\textbf{Step B: Alice against $-iX\sim X$} (a global phase does not matter). We have
 \[
 (U_A\otimes X)J\ket{00}=\tfrac1{\sqrt2}(ib\ket{00}+a\ket{01}+i\bar a\ket{10}-\bar b\ket{11}),
 \]
 so $(f_{00},f_{01},f_{10},f_{11})=(ib_1,ia_2,ia_1,ib_2)$ and $\$_A(U_A,X)=3b_1^2+5a_1^2+b_2^2$.
 
-\textbf{Step 3: average.} Against Bob's $50/50$ mixture Alice earns the average,
+\textbf{Step C: average.} Against Bob's $50/50$ mixture Alice earns the average,
 \[
 \tfrac12\big[5(a_1^2+a_2^2)+4(b_1^2+b_2^2)\big]=\tfrac52|a|^2+2|b|^2=2+\tfrac12|a|^2\le\tfrac52,
 \]
 with equality iff $|a|=1$, i.e.\ $U_A$ diagonal. By linearity no mixed deviation does better.
 
-\textbf{Step 4: Bob.} Let $G=\begin{pmatrix}a&b\\-\bar b&\bar a\end{pmatrix}$ answer Alice's mixture $\{\mathbb I,-iZ\}$. From
+\textbf{Step D: Bob.} Let $G=\begin{pmatrix}a&b\\-\bar b&\bar a\end{pmatrix}$ answer Alice's mixture $\{\mathbb I,-iZ\}$. From
 \[
 (\mathbb I\otimes G)J\ket{00}=\tfrac1{\sqrt2}(a\ket{00}-\bar b\ket{01}+ib\ket{10}+i\bar a\ket{11})
 \]
@@ -223,9 +223,9 @@ one gets $P_{CC}=a_2^2$, $P_{DD}=a_1^2$, $P_{CD}=b_2^2$, $P_{DC}=b_1^2$, so $\$_
 At $\gamma=\pi/2$, let $R$ denote the uniform mixture of $\{\mathbb{I},iX,iY,iZ\}$. If Bob plays $R$, every strategy of Alice yields exactly $9/4$. Hence $(R,R)$ is a weak Nash equilibrium in which every strategy is a best response.
 \end{proposition}
 \begin{proof}
-At $\gamma=\pi/2$, $\ket\Psi=J\ket{00}=(\ket{00}+i\ket{11})/\sqrt2$ has reduced states $\rho_A=\rho_B=\mathbb{I}/2$ (it is maximally entangled). For any unitary $U_A$ the state $\ket{\Psi'}=(U_A\otimes\mathbb{I})\ket\Psi$ has the same marginal on Bob, $\rho_B'=\mathbb{I}/2$, since Alice's local unitary does not touch it. Write $\ket{\sigma_k\Psi'}=(\mathbb{I}\otimes\sigma_k)\ket{\Psi'}$ for $\sigma_k\in\{\mathbb{I},X,Y,Z\}$. Then $\langle\sigma_j\Psi'|\sigma_k\Psi'\rangle=\langle\Psi'|\mathbb{I}\otimes\sigma_j^\dagger\sigma_k|\Psi'\rangle=\tr(\rho_B'\sigma_j\sigma_k)=\tfrac12\tr(\sigma_j\sigma_k)=\delta_{jk}$. So the four vectors are orthonormal in a four-dimensional space, hence an orthonormal basis, and $\sum_k\ket{\sigma_k\Psi'}\bra{\sigma_k\Psi'}=\mathbb{I}_4$ (completeness). Bob's strategies are $\mathbb I$ and $i\sigma_k$ for $k=1,2,3$, so the state entering $J^\dagger$ is
+At $\gamma=\pi/2$, $\ket\Psi=J\ket{00}=(\ket{00}+i\ket{11})/\sqrt2$ has reduced states $\rho_A=\rho_B=\mathbb{I}/2$ (it is maximally entangled). For any unitary $U_A$ the state $\ket{\Psi'}=(U_A\otimes\mathbb{I})\ket\Psi$ has the same marginal on Bob, $\rho_B'=\mathbb{I}/2$, since Alice's local unitary does not touch it. Write $\ket{\sigma_j\Psi'}=(\mathbb{I}\otimes\sigma_j)\ket{\Psi'}$ for $\sigma_j\in\{\mathbb{I},X,Y,Z\}$. Then $\langle\sigma_j\Psi'|\sigma_l\Psi'\rangle=\langle\Psi'|\mathbb{I}\otimes\sigma_j^\dagger\sigma_l|\Psi'\rangle=\tr(\rho_B'\sigma_j\sigma_l)=\tfrac12\tr(\sigma_j\sigma_l)=\delta_{jl}$. So the four vectors are orthonormal in a four-dimensional space, hence an orthonormal basis, and $\sum_j\ket{\sigma_j\Psi'}\bra{\sigma_j\Psi'}=\mathbb{I}_4$ (completeness). Bob's strategies are $\mathbb I$ and $i\sigma_j$ for $k=1,2,3$, so the state entering $J^\dagger$ is
 \[
-\rho=\tfrac14\sum_k\ket{\sigma_k\Psi'}\bra{\sigma_k\Psi'}=\tfrac14\,\mathbb{I}_4.
+\rho=\tfrac14\sum_j\ket{\sigma_j\Psi'}\bra{\sigma_j\Psi'}=\tfrac14\,\mathbb{I}_4.
 \]
 The phases $i$ in $iX,iY,iZ$ cancel in the projectors. The measured state is $J^\dagger\rho J=\tfrac14J^\dagger J=\mathbb{I}_4/4$, so every outcome has probability $1/4$ and $\$_A=\tfrac14(3+0+5+1)=9/4$ for every $U_A$. The same holds for mixtures of $U_A$, by linearity. By swap symmetry Bob, facing Alice's $R$, earns $\tfrac14(3+5+0+1)=9/4$ for every $U_B$. So no unilateral deviation changes either payoff, and $(R,R)$ is a NE; it is weak because every strategy is a best response.
 \end{proof}
@@ -328,7 +328,7 @@ S=\vec a^{\mathsf T}T(\vec b+\vec b')+\vec a'^{\mathsf T}T(\vec b-\vec b').
 \[
 S=2\cos\alpha\,\vec a^{\mathsf T}T\vec c+2\sin\alpha\,\vec a'^{\mathsf T}T\vec c'\le2\cos\alpha|T\vec c|+2\sin\alpha|T\vec c'|\le2\sqrt{|T\vec c|^2+|T\vec c'|^2}.
 \]
-\item By the Ky Fan inequality, $|T\vec c|^2+|T\vec c'|^2=\vec c^{\mathsf T}T^{\mathsf T}T\vec c+\vec c'^{\mathsf T}T^{\mathsf T}T\vec c'\le t_1+t_2$.
+\item By the Ky Fan inequality \cite{kyfan}, $|T\vec c|^2+|T\vec c'|^2=\vec c^{\mathsf T}T^{\mathsf T}T\vec c+\vec c'^{\mathsf T}T^{\mathsf T}T\vec c'\le t_1+t_2$.
 \item Equality holds for $\vec c,\vec c'$ the top two eigenvectors, $\vec a\propto T\vec c$, $\vec a'\propto T\vec c'$ and $\tan\alpha=|T\vec c'|/|T\vec c|$.
 \end{enumerate}
 We use \cref{eq:horodecki} as a cited result.
@@ -348,22 +348,29 @@ The optimized thresholds are our main values; the fixed-setting thresholds ($0.1
 \end{figure}
 
 \subsection{EWL}
-\Cref{fig:phase} shows, over the $(\gamma,p)$ plane, the payoff of $(Q,Q)$ and the boundary of the region where it is a NE in the two-parameter set. \Cref{tab:ewl} lists the entanglement threshold $\gamma^*$ and the payoffs at $\gamma=\pi/2$ for $p=0.1$ and $p=0.3$ only; the phase figure covers $p$ up to $0.6$. The column $\$(D,D)$ is the payoff of the classical profile in the same noisy device, that is, what players earn without using the quantum move.
+\Cref{fig:phase} shows, over the $(\gamma,p)$ plane, the payoff of $(Q,Q)$ and the boundary of the region where it is a NE in the two-parameter set. \Cref{tab:ewl} lists the entanglement threshold $\gamma^*$ and the payoffs at $\gamma=\pi/2$ for $p=0.1$, $0.3$ and $0.6$. The column $\$(D,D)$ is the payoff of the classical profile in the same noisy device, that is, what players earn without using the quantum move.
 
 The thresholds in \cref{tab:ewl} come from bisection on a $41\times21$ deviation grid with bisection tolerance $10^{-4}$ and carry an uncertainty of $\pm0.001$. \texttt{convergence\_check.py} recomputes them on $121\times61$ and $401\times201$ grids (agreement to $10^{-4}$), confirms a single switch from non-NE to NE along a 400-point $\gamma$ scan for $p=0.1,0.3,0.6$ in all three channels, and runs the continuous optimizer just above each $\gamma^*$, where it finds no profitable deviation. It also gives the dephasing value $p\approx0.622$ and the amplitude-damping threshold $0.671$ at $p=0.6$ quoted below.
 \begin{table}[htbp]\centering\small
 \caption{EWL $(Q,Q)$ equilibrium threshold $\gamma^*$ and payoffs at $\gamma=\pi/2$. The row $p=0$ is analytic; the numerical accuracy of the thresholds is described in the text.}
 \label{tab:ewl}
-\begin{tabular}{lccccccc}
+\begin{tabular}{lcccc}
 \toprule
-channel & \multicolumn{3}{c}{$p=0.1$} & \multicolumn{3}{c}{$p=0.3$}\\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}
- & $\gamma^*$ & $\$(Q,Q)$ & $\$(D,D)$ & $\gamma^*$ & $\$(Q,Q)$ & $\$(D,D)$\\
+channel & $p$ & $\gamma^*$ & $\$(Q,Q)$ & $\$(D,D)$\\
 \midrule
-none ($p=0$) & 0.685 & 3.000 & 1.000 & 0.685 & 3.000 & 1.000\\
-depolarizing & 0.712 & 2.813 & 1.311 & 0.785 & 2.520 & 1.800\\
-dephasing & 0.747 & 2.810 & 1.190 & 0.909 & 2.490 & 1.510\\
-amplitude damping & 0.682 & 2.945 & 1.145 & 0.678 & 2.805 & 1.405\\
+none & 0 & 0.685 & 3.000 & 1.000\\
+\midrule
+depolarizing & 0.1 & 0.712 & 2.813 & 1.311\\
+ & 0.3 & 0.785 & 2.520 & 1.800\\
+ & 0.6 & 1.021 & 2.280 & 2.200\\
+\midrule
+dephasing & 0.1 & 0.747 & 2.810 & 1.190\\
+ & 0.3 & 0.909 & 2.490 & 1.510\\
+ & 0.6 & 1.399 & 2.160 & 1.840\\
+\midrule
+amplitude damping & 0.1 & 0.682 & 2.945 & 1.145\\
+ & 0.3 & 0.678 & 2.805 & 1.405\\
+ & 0.6 & 0.671 & 2.520 & 1.720\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -584,6 +591,7 @@ So $P_{CC}=c^2(\sin^2\phi+\cos^2\gamma\cos^2\phi)=c^2(1-\sin^2\gamma\cos^2\phi)$
 \bibitem{cantwell} C.~Cantwell, ``Quantum Chess: Developing a Mathematical Framework and Design Methodology for Creating Quantum Games'', arXiv:1906.05836 (2019).
 \bibitem{qchess} C.~Cantwell, Quantum Chess documentation, ``Mathematics'', \url{https://cantwellc.github.io/QuantumChessDocs/math} (accessed November 2026).
 \bibitem{vanenk-single} S.~J. van Enk, ``Single-particle entanglement'', Phys.\ Rev.\ A \textbf{72}, 064306 (2005).
+\bibitem{kyfan} K.~Fan, ``On a theorem of Weyl concerning eigenvalues of linear transformations I'', Proc.\ Natl.\ Acad.\ Sci.\ USA \textbf{35}, 652 (1949).
 \bibitem{nc} M.~A. Nielsen and I.~L. Chuang, \emph{Quantum Computation and Quantum Information}, 10th anniversary ed.\ (Cambridge University Press, 2010), Secs.~2.2.6 (POVM measurements) and 2.2.8 (composite systems).
 \bibitem{notes} Course notes, ``Quantum Information Theory, Topic 9: Qubit decoherence channels'' (2026), Eqs.\ 9.1, 9.2, 9.8, 9.9, 9.15.
 \end{thebibliography}

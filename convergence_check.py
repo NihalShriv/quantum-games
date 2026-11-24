@@ -1,5 +1,5 @@
 """Backs the convergence and threshold claims in the report (under a minute):
-1. gamma* at p=0.1, 0.3 on 41x21, 121x61 and 401x201 deviation grids;
+1. gamma* at p=0.1, 0.3, 0.6 on 41x21, 121x61 and 401x201 deviation grids;
 2. a single non-NE -> NE switch along a 400-point gamma scan (p=0.1, 0.3, 0.6, all channels);
 3. continuous optimiser check of (Q,Q) just above each gamma*;
 4. dephasing noise at which (Q,Q) stops being a NE at gamma=pi/2; amplitude-damping gamma* at p=0.6."""
@@ -20,7 +20,7 @@ def gstar(k, p, G, tol=1e-5):
 grids = {n: grid(*n) for n in [(41, 21), (121, 61), (401, 201)]}
 print("1. gamma* by grid size")
 for k in KINDS:
-    for p in (0.1, 0.3):
+    for p in (0.1, 0.3, 0.6):
         gs = [gstar(k, p, G) for G in grids.values()]
         print(f"  {k:13s} p={p}: " + "  ".join(f"{g:.4f}" for g in gs))
         assert max(gs) - min(gs) < 1e-3
@@ -34,7 +34,7 @@ for k in KINDS:
 
 print("3. continuous check just above gamma*")
 for k in KINDS:
-    for p in (0.1, 0.3):
+    for p in (0.1, 0.3, 0.6):
         g = gstar(k, p, GRID) + 1e-3
         gain = best_deviation(Q, g, k, p)[0] - ewl(Q, Q, g, k, p)[0]
         print(f"  {k:13s} p={p}: best deviation gain = {gain:.1e}"); assert gain < 1e-9
